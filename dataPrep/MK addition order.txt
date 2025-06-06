@@ -1,0 +1,8 @@
+archperson + stud_profile
+staff --one per class
+stud_hist_schooling
+cp_stud_attendance
+
+
+issues:
+admission_no
