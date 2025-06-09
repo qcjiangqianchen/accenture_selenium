@@ -173,7 +173,8 @@ BEGIN
 		/* cp_cur_cay_course_stud_link - assign from online */
 		
 		delete from cp20.cp_cur_cay_course where school_code = v_school;
-		delete from cp20.cp_cur_cay_course_subj_link where school_code = v_school;
+		delete from cp20.cp_cur_cay_course_subj_link where school_code = v_school;				
+		
 		-- SEC 1 SUBJECT COMBINATIONS
  		v_course_sys_code := LPAD(nextval('cp01.SEQ_COURSE')::TEXT,14,'0');
         INSERT INTO cp20.cp_cur_cay_course (id,academic_year,course_sys_code,school_code,level_xcode,program_ind,stream_xcode,course_xcode,course_name,course_type_code,curriculum_ind,previous_course_refid,new_jcci_cur_ind,course_offered_ind,version_no,created_ts,created_by,updated_ts,updated_by,delete_ind) VALUES
@@ -192,6 +193,7 @@ BEGIN
             (replace(public.uuid_generate_v4()::text,'-',''),to_char(now(), 'YYYY'), v_course_sys_code, v_school, '2MUSIC','31','00','14',NULL,NULL,1,now(), 'LT_DATAPREP',now(),'LT_DATAPREP','N'),
             (replace(public.uuid_generate_v4()::text,'-',''),to_char(now(), 'YYYY'), v_course_sys_code, v_school, '2PE','31','00','14',NULL,NULL,1,now(), 'LT_DATAPREP',now(),'LT_DATAPREP','N');
 			
+		v_course_sys_code := LPAD(nextval('cp01.SEQ_COURSE')::TEXT,14,'0');	
 		INSERT INTO cp20.cp_cur_cay_course (id,academic_year,course_sys_code,school_code,level_xcode,program_ind,stream_xcode,course_xcode,course_name,course_type_code,curriculum_ind,previous_course_refid,new_jcci_cur_ind,course_offered_ind,version_no,created_ts,created_by,updated_ts,updated_by,delete_ind) VALUES
  		    (replace(public.uuid_generate_v4()::text,'-',''), to_char(now(), 'YYYY'),v_course_sys_code, v_school,'31','0',NULL ,v_course_sys_code,'Sec 1 G3 Subject Combi ML',NULL,'N',NULL,'N','Y',1,NOW(),'LT_DATAPREP',NOW(),'LT_DATAPREP','N');
         INSERT INTO cp20.cp_cur_cay_course_subj_link(id, academic_year, course_refid, school_code, subject_code, level_xcode, stream_xcode, subject_level_icode, bandedgroup_ind, bandedgroup_refid, version_no, created_ts, created_by, updated_ts, updated_by, delete_ind) VALUES 
@@ -208,6 +210,7 @@ BEGIN
             (replace(public.uuid_generate_v4()::text,'-',''),to_char(now(), 'YYYY'), v_course_sys_code, v_school, '2MUSIC','31','00','14',NULL,NULL,1,now(), 'LT_DATAPREP',now(),'LT_DATAPREP','N'),
             (replace(public.uuid_generate_v4()::text,'-',''),to_char(now(), 'YYYY'), v_course_sys_code, v_school, '2PE','31','00','14',NULL,NULL,1,now(), 'LT_DATAPREP',now(),'LT_DATAPREP','N');		
 			
+		v_course_sys_code := LPAD(nextval('cp01.SEQ_COURSE')::TEXT,14,'0');			
 		INSERT INTO cp20.cp_cur_cay_course (id,academic_year,course_sys_code,school_code,level_xcode,program_ind,stream_xcode,course_xcode,course_name,course_type_code,curriculum_ind,previous_course_refid,new_jcci_cur_ind,course_offered_ind,version_no,created_ts,created_by,updated_ts,updated_by,delete_ind) VALUES
  		    (replace(public.uuid_generate_v4()::text,'-',''), to_char(now(), 'YYYY'),v_course_sys_code, v_school,'31','0',NULL ,v_course_sys_code,'Sec 1 G3 Subject Combi TL',NULL,'N',NULL,'N','Y',1,NOW(),'LT_DATAPREP',NOW(),'LT_DATAPREP','N');
         INSERT INTO cp20.cp_cur_cay_course_subj_link(id, academic_year, course_refid, school_code, subject_code, level_xcode, stream_xcode, subject_level_icode, bandedgroup_ind, bandedgroup_refid, version_no, created_ts, created_by, updated_ts, updated_by, delete_ind) VALUES 

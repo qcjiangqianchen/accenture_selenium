@@ -27,6 +27,7 @@ import java.io.IOException;
 
 
 public class TCTest {
+    @Test(groups = {"dataPrep"})
     public static void DataPrep() {
         // === Configuration ===
         String psqlPath = "bin/psql/psql.exe";  // relative to your project root
@@ -114,8 +115,8 @@ public class TCTest {
 
         System.out.println("✅ All scripts executed.");
     }
+    
     private WebDriver setupDriver() throws InterruptedException {
-        DataPrep();
         EdgeOptions options = new EdgeOptions();
         HashMap<String, Object> prefs = new HashMap<>();
         prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
@@ -144,6 +145,7 @@ public class TCTest {
             driver.quit();
         }
     }
+
     @Test(groups = {"tca7"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA7() throws Exception {
         WebDriver driver = setupDriver();
@@ -159,6 +161,7 @@ public class TCTest {
             }
         }
     }
+
     @Test(groups = {"tca5"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA5() throws Exception {
         WebDriver driver = setupDriver();
@@ -174,6 +177,7 @@ public class TCTest {
             }
         }
     }
+
     @Test(groups = {"tca11"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA11() throws Exception {
         WebDriver driver = setupDriver();
