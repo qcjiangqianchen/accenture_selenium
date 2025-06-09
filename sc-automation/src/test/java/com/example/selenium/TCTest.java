@@ -19,54 +19,100 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.time.Duration;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
-import java.sql.*;
 
 
 public class TCTest {
-    private void DataPrep() throws InterruptedException
-    {
-        String jdbcUrl = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
-        String user = "predevscpgadmin";
+    public static void DataPrep() {
+        // === Configuration ===
+        String psqlPath = "bin/psql/psql.exe";  // relative to your project root
+        String host = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
+        String port = "5432";
+        String dbName = "predevscpg_new";
+        String username = "predevscpgadmin";
         String password = "password_predevscpgadmin";
-        String folderPath = "dataPrep"; // relative path
 
-        try (Connection conn = DriverManager.getConnection(jdbcUrl, user, password);
-            Statement stmt = conn.createStatement()) {
+        String folderPath = "dataPrep";  // Adjust if needed
+        File folder = new File(folderPath);
 
-            List<Path> sqlFiles = Files.list(Paths.get(folderPath))
-                    .filter(path -> path.toString().endsWith(".sql"))
-                    .sorted(Comparator.comparingInt(TCTest::extractLeadingNumber))
-                    .collect(Collectors.toList());
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.err.println("❌ Folder not found: " + folderPath);
+            return;
+        }
 
-            for (Path sqlFile : sqlFiles) {
-                System.out.println("Executing: " + sqlFile.getFileName());
-                String sql = Files.readString(sqlFile);
+        File[] sqlFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".sql"));
 
-                for (String statement : sql.split(";")) {
-                    statement = statement.trim();
-                    if (!statement.isEmpty()) {
-                        stmt.execute(statement);
-                    }
+        if (sqlFiles == null || sqlFiles.length == 0) {
+            System.out.println("⚠️ No SQL files found in: " + folderPath);
+            return;
+        }
+
+        // Sort by leading number in filename, then alphabetically
+        Arrays.sort(sqlFiles, new Comparator<File>() {
+            Pattern pattern = Pattern.compile("^(\\d+)");
+            @Override
+            public int compare(File f1, File f2) {
+                Integer num1 = extractLeadingNumber(f1.getName());
+                Integer num2 = extractLeadingNumber(f2.getName());
+
+                if (num1 != null && num2 != null) {
+                    return num1.compareTo(num2);
+                } else if (num1 != null) {
+                    return -1; // Numbers come before non-numbers
+                } else if (num2 != null) {
+                    return 1;
+                } else {
+                    return f1.getName().compareTo(f2.getName());
                 }
             }
-            Thread.sleep(5000); // wait for 5 seconds to ensure all operations are completed
-            System.out.println("All scripts executed successfully.");
 
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            private Integer extractLeadingNumber(String filename) {
+                Matcher matcher = pattern.matcher(filename);
+                if (matcher.find()) {
+                    try {
+                        return Integer.parseInt(matcher.group(1));
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+        });
+
+        for (File sqlFile : sqlFiles) {
+            System.out.println("▶️ Executing: " + sqlFile.getName());
+
+            ProcessBuilder pb = new ProcessBuilder(
+                psqlPath,
+                "-h", host,
+                "-p", port,
+                "-U", username,
+                "-d", dbName,
+                "-f", sqlFile.getAbsolutePath()
+            );
+
+            pb.environment().put("PGPASSWORD", password);
+            pb.inheritIO();
+
+            try {
+                Process process = pb.start();
+                int exitCode = process.waitFor();
+                if (exitCode == 0) {
+                    System.out.println("✅ Success: " + sqlFile.getName());
+                } else {
+                    System.err.println("❌ Failed: " + sqlFile.getName() + " (Exit Code " + exitCode + ")");
+                }
+            } catch (IOException | InterruptedException e) {
+                System.err.println("❌ Error executing " + sqlFile.getName() + ": " + e.getMessage());
+                e.printStackTrace();
+            }
         }
-    }
-    private static int extractLeadingNumber(Path path) {
-        String filename = path.getFileName().toString();
-        try {
-            return Integer.parseInt(filename.split("_")[0]);
-        } catch (NumberFormatException e) {
-            return Integer.MAX_VALUE; // push unnumbered files to the end
-        }
+
+        System.out.println("✅ All scripts executed.");
     }
     private WebDriver setupDriver() throws InterruptedException {
         DataPrep();
