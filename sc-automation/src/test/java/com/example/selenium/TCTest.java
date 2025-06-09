@@ -27,7 +27,7 @@ import java.sql.*;
 
 
 public class TCTest {
-    private void DataPrep()
+    private void DataPrep() throws InterruptedException
     {
         String jdbcUrl = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
         String user = "predevscpgadmin";
@@ -53,7 +53,7 @@ public class TCTest {
                     }
                 }
             }
-
+            Thread.sleep(5000); // wait for 5 seconds to ensure all operations are completed
             System.out.println("All scripts executed successfully.");
 
         } catch (SQLException | IOException e) {
@@ -68,7 +68,7 @@ public class TCTest {
             return Integer.MAX_VALUE; // push unnumbered files to the end
         }
     }
-    private WebDriver setupDriver() {
+    private WebDriver setupDriver() throws InterruptedException {
         DataPrep();
         EdgeOptions options = new EdgeOptions();
         HashMap<String, Object> prefs = new HashMap<>();
