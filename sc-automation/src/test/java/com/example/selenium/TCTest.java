@@ -19,11 +19,57 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.time.Duration;
+import java.io.IOException;
+import java.nio.file.*;
+import java.sql.*;
+
 
 public class TCTest {
+    private void DataPrep()
+    {
+        String jdbcUrl = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
+        String user = "predevscpgadmin";
+        String password = "password_predevscpgadmin";
+        String folderPath = "dataPrep"; // relative path
 
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, user, password);
+             Statement stmt = conn.createStatement()) {
+
+            List<Path> sqlFiles = Files.list(Paths.get(folderPath))
+                    .filter(path -> path.toString().endsWith(".sql"))
+                    .sorted(Comparator.comparingInt(TCTest::extractLeadingNumber))
+                    .collect(Collectors.toList());
+
+            for (Path sqlFile : sqlFiles) {
+                System.out.println("Executing: " + sqlFile.getFileName());
+                String sql = Files.readString(sqlFile);
+
+                for (String statement : sql.split(";")) {
+                    statement = statement.trim();
+                    if (!statement.isEmpty()) {
+                        stmt.execute(statement);
+                    }
+                }
+            }
+
+            System.out.println("All scripts executed successfully.");
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static int extractLeadingNumber(Path path) {
+        String filename = path.getFileName().toString();
+        try {
+            return Integer.parseInt(filename.split("_")[0]);
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE; // push unnumbered files to the end
+        }
+    }
     private WebDriver setupDriver() {
+        DataPrep();
         EdgeOptions options = new EdgeOptions();
         HashMap<String, Object> prefs = new HashMap<>();
         prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
