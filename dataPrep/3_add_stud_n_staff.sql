@@ -109,6 +109,9 @@ BEGIN
         DELETE FROM cp01.cp_stud_hist_promotion
             WHERE school_code = v_school;
 
+        DELETE FROM cp01.cp_stud_hist_schooling
+            WHERE school_code = v_school;
+
         DELETE FROM cp01.cp_stud_profile
             WHERE school_code = v_school;
 
