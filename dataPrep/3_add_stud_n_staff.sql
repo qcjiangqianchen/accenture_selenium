@@ -624,6 +624,26 @@ $BLOCK$;
 
 COMMIT;
 
+\qecho '****************** MIMS Mapping first teacher to base account ******************'
+DO $BLOCK$ 
+DECLARE
+    v_staffID CHARACTER VARYING(20) := NULL;
+BEGIN
+    SELECT staff_id
+    INTO v_staffID
+    FROM cp01.cp_staff_profile
+    WHERE school_code = '9808'
+    ORDER BY staff_id ASC
+    LIMIT 1;
+	delete from cp01.cp_mims_mapping where mims_identifier = '80211517';
+	insert into cp01.cp_mims_mapping (person_sys_code, mims_identifier, mims_login_id, record_version_no, created_date,created_by_id, last_updated_date, updated_by_id)
+	values (v_staffID , '80211517', 'SCU00014@schools.gov.sg', 1, now(), 'LT_DATAPREP', now(), 'LT_DATAPREP');
+    RAISE NOTICE 'First staff ID: %', v_staffID;
+END
+$BLOCK$;
+COMMIT;
+
+
 \qecho 'BF cp_stud_hist_schooling'
 select school_code, movement_year, count(*)  from cp01.cp_stud_hist_schooling
 where school_code between '9808' and '9808' 
