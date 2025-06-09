@@ -35,7 +35,7 @@ public class TCTest {
         String folderPath = "dataPrep"; // relative path
 
         try (Connection conn = DriverManager.getConnection(jdbcUrl, user, password);
-             Statement stmt = conn.createStatement()) {
+            Statement stmt = conn.createStatement()) {
 
             List<Path> sqlFiles = Files.list(Paths.get(folderPath))
                     .filter(path -> path.toString().endsWith(".sql"))
