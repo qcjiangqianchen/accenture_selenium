@@ -11,10 +11,10 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA16 {
     
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results aggregated view by class
         System.out.println("TCA16 START");
-        TCASetup.navigateToResultsByClass(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
+        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA16_1(driver, wait); 
@@ -22,7 +22,7 @@ public class TCA16 {
         System.out.println("TCA16 END");
     }
 
-    public static void TCA16_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA16_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //TCA15.1.1: filter by class,assessment
         filterByClassAndAssessment(driver, wait);
 
@@ -30,7 +30,7 @@ public class TCA16 {
         highlightStudent(driver, wait); // Highlight the first row as an example
     }
 
-    public static void filterByClassAndAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {   
+    public void filterByClassAndAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {   
         //navigate to level nav tab
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
@@ -55,7 +55,7 @@ public class TCA16 {
         System.out.println("✅ assessment chosen");
     }
 
-    public static void highlightStudent(WebDriver driver, WebDriverWait wait) {
+    public void highlightStudent(WebDriver driver, WebDriverWait wait) {
         //header reference to scroll back to top
         WebElement header = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("header")));
 

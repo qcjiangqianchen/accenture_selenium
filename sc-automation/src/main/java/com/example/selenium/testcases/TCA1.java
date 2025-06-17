@@ -15,7 +15,7 @@ import com.example.selenium.setup.TCASetup;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
- 
+
 
 public class TCA1 {
 
@@ -30,7 +30,7 @@ public class TCA1 {
     static boolean breaker = false;
     static long sleepduration = 1000; // 1 second
 
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         System.out.println("TCA1 START");
         // Run scenarios
         String[] scenarios = {"HDP Remarks and Conduct", "Personal Qualities", "Subject Grade", "Subject Remarks", "Subject Results"};
@@ -98,8 +98,8 @@ public class TCA1 {
     //     } catch (Exception ignored) {}
     // }
 
-    public static void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        TCASetup.navigateToResultsByClass(driver, wait, "//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
+    public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws InterruptedException {
+        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
         Thread.sleep(sleepduration);
         System.out.println("Results Cutoff page chosen");
 

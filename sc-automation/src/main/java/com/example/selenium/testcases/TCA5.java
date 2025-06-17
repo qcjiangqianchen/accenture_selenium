@@ -25,7 +25,7 @@ public class TCA5 {
     static boolean breaker = false;
     static long sleepduration = 1000; // 1 second
 
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         System.out.println("TCA5 START");
 
         TCA5_1(driver, wait);
@@ -34,9 +34,9 @@ public class TCA5 {
         System.out.println("✅ TCA5 END");
     }
 
-    public static void TCA5_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA5_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         Actions actions = new Actions(driver);
-        TCASetup.navigateToResultsByClass(driver, wait, "//a[text()='HDP Remarks and Conduct by Class']");
+        TCASetup.navigateToDesiredPage(driver, wait, "//a[text()='HDP Remarks and Conduct by Class']");
         System.out.println("HDP Remarks and Conduct by class page chosen");
         filterByClassSubjectAssessment(driver, wait);
         // Get all table rows
@@ -76,7 +76,7 @@ public class TCA5 {
         WebElement downloadIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
         downloadIcon.click();
     }
-    public static void saveMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void saveMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         WebElement searchContainer = wait.until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
@@ -92,7 +92,7 @@ public class TCA5 {
             System.out.println("❌ An unexpected error occurred while trying to save marks: " + e.getMessage());
         }
     }
-    public static void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to level nav tab
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(1000); // Wait for the page to load

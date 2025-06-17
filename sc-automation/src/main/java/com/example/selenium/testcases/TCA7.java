@@ -12,10 +12,10 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA7 {
     
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results aggregated view by class 
         System.out.println("TCA7 START");
-        TCASetup.navigateToResultsByClass(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Subject Remarks by Class / Teaching Group')]");
+        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Subject Remarks by Class / Teaching Group')]");
 
         //TCA7.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA7_1(driver, wait); 
@@ -23,7 +23,7 @@ public class TCA7 {
         System.out.println("TCA7 END");
     }
 
-    public static void TCA7_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA7_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //TCA7.1.1: filter by class, subject, and assessment
         filterByClassSubjectAssessment(driver, wait);
 
@@ -31,11 +31,11 @@ public class TCA7 {
         enterRemarks(driver, wait);
     }
 
-    public static void TCA7_2(WebDriver driver, WebDriverWait wait) {
+    public void TCA7_2(WebDriver driver, WebDriverWait wait) {
 
     }
 
-    public static void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException{
+    public void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException{
         //navigate to level nav tab
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
@@ -67,7 +67,7 @@ public class TCA7 {
     }
 
 
-    public static void enterRemarks(WebDriver driver, WebDriverWait wait) throws InterruptedException{
+    public void enterRemarks(WebDriver driver, WebDriverWait wait) throws InterruptedException{
         //get all rows
         List<WebElement> rows = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("tr:not(.child_table)")));
         

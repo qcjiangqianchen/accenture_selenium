@@ -14,10 +14,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA11 {
     
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        //navigate to results bby class page
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+        //navigate to results by class page
         System.out.println("TCA11 START");
-        TCASetup.navigateToResultsByClass(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
+        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
 
         //TCA11.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA11_1(driver, wait);
@@ -28,7 +28,7 @@ public class TCA11 {
         System.out.println("✅ TCA11 END");
     }
 
-    public static void TCA11_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA11_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //TCA11.1.1: filter by class, subject, and assessment
         filterByClassSubjectAssessment(driver, wait);
 
@@ -47,7 +47,7 @@ public class TCA11 {
         }
     }
 
-    public static void TCA11_2(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA11_2(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         // filterByClassSubjectAssessment(driver, wait);
         
         //loop through each term in the main table
@@ -71,7 +71,7 @@ public class TCA11 {
         }
     }
 
-    public static void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to level nav tab
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
@@ -107,7 +107,7 @@ public class TCA11 {
         System.out.println("TCA11.1.1 successful");
     }
 
-    public static void expandCollaspeTerm(WebDriver driver, WebDriverWait wait, int index) throws InterruptedException {
+    public void expandCollaspeTerm(WebDriver driver, WebDriverWait wait, int index) throws InterruptedException {
         //expand term
         WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
@@ -115,7 +115,7 @@ public class TCA11 {
         System.out.println("✅ term " + (index + 1) + " expanded/collasped");
     }
 
-    public static void inputMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void inputMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
         List<WebElement> rows = mainTable.findElements(By.cssSelector("tr:not(.child_table)"));
         for (WebElement row:rows) {
@@ -135,7 +135,7 @@ public class TCA11 {
         }
     }
 
-    public static void saveMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void saveMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         WebElement searchContainer = wait.until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
@@ -152,7 +152,7 @@ public class TCA11 {
         }
     }
 
-    public static void updateCsvWithRemarks(Path csvPath) throws IOException {
+    public void updateCsvWithRemarks(Path csvPath) throws IOException {
         List<String> lines = Files.readAllLines(csvPath);
         if (!lines.isEmpty()) {
             lines.set(0, lines.get(0) + ",remarks");

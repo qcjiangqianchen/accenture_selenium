@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TCASetup {
     
-    public static void navigateToResultsByClass(WebDriver driver, WebDriverWait wait, String desiredPage) throws InterruptedException{
+    public static void navigateToDesiredPage(WebDriver driver, WebDriverWait wait, String desiredPage) throws InterruptedException{
         //nav btns at top of page
         List <WebElement> nav_btns = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn")));
         WebElement btn = nav_btns.get(1);

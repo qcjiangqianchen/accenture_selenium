@@ -10,10 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA13 {
     
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results by student page
         System.out.println("TCA13 START");
-        TCASetup.navigateToResultsByClass(driver, wait, "//a[.//span[text()='Results'] and contains(., 'by Student')]");
+        TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Results'] and contains(., 'by Student')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA13_1(driver, wait); 
@@ -21,7 +21,7 @@ public class TCA13 {
         System.out.println("TCA13 END");
     }
 
-    public static void TCA13_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA13_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //TCA13.1.1: filter by class, subject, and assessment
         filterByClassStudentAssessment(driver, wait);
 
@@ -38,7 +38,7 @@ public class TCA13 {
         }
     }
 
-    public static void filterByClassStudentAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void filterByClassStudentAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to level nav tab
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
@@ -72,7 +72,7 @@ public class TCA13 {
         System.out.println("TCA13.1.2 successful");
     }
 
-    public static void expandCollaspeTerm(WebDriver driver, WebDriverWait wait, int index) throws InterruptedException {
+    public void expandCollaspeTerm(WebDriver driver, WebDriverWait wait, int index) throws InterruptedException {
         //expand term
         WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));

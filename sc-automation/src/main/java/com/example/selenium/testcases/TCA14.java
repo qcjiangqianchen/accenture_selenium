@@ -14,10 +14,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA14 {
     
-    public static void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         // Navigate to results by class page
         System.out.println("TCA14 START");
-        TCASetup.navigateToResultsByClass(driver, wait, "//a[.//span[text()='Results'] and contains(., 'Upload')]");
+        TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Results'] and contains(., 'Upload')]");
 
         // TCA14.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA14_1(driver, wait);
@@ -25,7 +25,7 @@ public class TCA14 {
         System.out.println("✅ TCA14 END");
     }
 
-    public static void TCA14_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA14_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         try {
             filterByLevelAndData(driver, wait);
 
@@ -36,7 +36,7 @@ public class TCA14 {
     
     }
 
-    public static void filterByLevelAndData(WebDriver driver, WebDriverWait wait) throws InterruptedException{
+    public void filterByLevelAndData(WebDriver driver, WebDriverWait wait) throws InterruptedException{
         //filter by level
         List<WebElement> selectDropdowns = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
         selectDropdowns.get(0).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the first dropdown
@@ -47,7 +47,7 @@ public class TCA14 {
         Thread.sleep(2000); // Wait for the page to load
     }
 
-    public static void downloadReport(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
+    public void downloadReport(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
         Set<String> before = FileUtils.getFilesBeforeDownload();
         // Click on the download button
         WebElement downloadIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
@@ -57,7 +57,7 @@ public class TCA14 {
         updateCsvWithRemarks(filePath);
     }
 
-    public static void updateCsvWithRemarks(Path csvPath) throws IOException {
+    public void updateCsvWithRemarks(Path csvPath) throws IOException {
         List<String> lines = Files.readAllLines(csvPath);
         if (!lines.isEmpty()) {
             lines.set(0, lines.get(0) + ",remarks");
