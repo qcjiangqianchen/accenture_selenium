@@ -1,148 +1,213 @@
-// package com.example.selenium.loading;
+package com.example.selenium.loading;
 
-// import com.example.selenium.setup.TCASetup;
-// import com.example.selenium.driver.DriverInstance;
+import com.example.selenium.setup.TCASetup;
+import com.example.selenium.driver.DriverInstance;
+import com.example.selenium.exception.ValidationFailedExecption;
+import com.example.selenium.exception.InvalidExcpetion;
 
-// import java.io.IOException;
-// import java.nio.file.*;
-// import java.sql.Driver;
-// import java.util.List;
-// import java.util.Set;
 
-// import org.openqa.selenium.*;
-// import org.openqa.selenium.support.ui.WebDriverWait;
-// import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-// public class SubjectAllocation {
-//     private static WebDriver driver;
-//     private static WebDriverWait wait;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-//     public SubjectAllocation() {
-//         driver = DriverInstance.getDriver();
-//         wait = DriverInstance.getWait();
-//     }
+public class SubjectAllocation {
     
+    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+        //navigate to subject allocation page
+        System.out.println("Subject Allocation START");
+        TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Subject'] and contains(., 'Allocation')]");
 
-//     public static void run() throws InterruptedException {
-//         //navigate to subject allocation page
-//         System.out.println("Subject Allocation START");
-//         TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Subject'] and contains(., 'Allocation')]");
+        //subject allocation: assigning subject combinations to students in classes
+        try {
+            filterByYearLevelCourse(driver, wait);
+        } catch (ValidationFailedExecption e) {
+            System.out.println("❌ Validation failed: " + e.getMessage());
+        } catch (InvalidExcpetion e) {
+            System.out.println("❌ Invalid exception: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("❌ An unexpected error occurred: " + e.getMessage());
+        }
+        System.out.println("✅ Subject Allocation END");
 
-//         //subject allocation: assigning subject combinations to students in classes
+    }
 
-//     }
+    public void filterByYearLevelCourse(WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption {
+        //get all select tags
+        List<WebElement> allSelectTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
+         System.out.println("✅ allSelectTags count: " + allSelectTags.size());  // 👈 add this line
 
-//     public void subjectAllocation(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-//         filterByYearLevelCourse(driver, wait);
-//     }
+        if (allSelectTags.size() < 3) {
+            throw new RuntimeException("❌ Page did not load enough <select> elements. Found: " + allSelectTags.size());
+        }
+        WebElement yearSelect = allSelectTags.get(0);
+        WebElement levelSelect = allSelectTags.get(1);
+        WebElement courseSelect = allSelectTags.get(2);
 
-
-//     public void filterByYearLevelCourse(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-//         //get all select tags
-//         List<WebElement> allSelectTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
-//         WebElement yearSelect = allSelectTags.get(0);
-//         WebElement levelSelect = allSelectTags.get(1);
-//         WebElement courseSelect = allSelectTags.get(2);
-//         WebElement subjectSelect = allSelectTags.get(3);
-
-//         List<WebElement> allCheckboxTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
-//         WebElement selectAllStudents = allCheckboxTags.get(0);
-//         WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
-
-//         //filter allocation year
-//         sortByLevel(levelSelect);
-
-//         //filter level
-//         levelSelect.findElements(By.tagName("option")).get(2).click();
-//         Thread.sleep(2000); // Wait for the page to load
-//         System.out.println("✅ level chosen");
-
-//         //filter by class
-//         wait.until(ExpectedConditions.elementToBeClickable(By.className("dropdown-btn"))).click();
-//         Thread.sleep(2000); // Wait for the dropdown to open
-//         System.out.println("✅ class dropdown opened");
-//         WebElement dropDownList = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("dropdown-list")));
-//         WebElement selectAllOption = dropDownList.findElements(By.tagName("ul")).get(0).findElements(By.tagName("li")).get(0);
-//         List<WebElement> classOptions = dropDownList.findElements(By.tagName("ul")).get(1).findElements(By.tagName("li"));
-
-//         for (WebElement classOption : classOptions) {
-//             if (classOption.getText().equals("SEC3-01")) {
-//                 classOption.click();
-//                 break;
-//             }
-//         }
-//     }
-
-//     public void sortByLevelCLassCourse(WebElement levelSelect) throws InterruptedException {
-//         //loop through level and filter by level
-//         List<WebElement> levelOptions = levelSelect.findElements(By.tagName("option"));
-//         for (WebElement option : levelOptions) {
-//             option.click();
-//             Thread.sleep(2000); // Wait for the page to load
-
-//             //check the level and apply neccesary condition for streaming
-//             String level = option.getText().trim();
-//             if (level.equalsIgnoreCase("SECONDARY 1")) {
-//                 //streaming not needed for sec 1
-//                 System.out.println("✅ level chosen: " + level);
-//             } else if (level.equalsIgnoreCase("SECONDARY 2")) {
-//                 //loop through to select the classes first
-//                 //set the streaming conditions according to level requirements            
-//             } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-                
-//             } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-
-//             } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-                
-//             }
+        //filter by year
+        yearSelect.findElements(By.tagName("option")).get(1).click(); // Click on the first option in the year dropdown
+        Thread.sleep(2000); // Wait for the page to load
+        System.out.println("✅ year chosen: " + yearSelect.getAttribute("value"));
 
 
+        //get class dropdown
+        WebElement classSelect = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("multiselect-dropdown")));
+        classSelect.click(); // Click to open the class dropdown
+        Thread.sleep(2000); // Wait for the dropdown to open
+        List<WebElement> classOptions = classSelect.findElements(By.tagName("ul")).get(1).findElements(By.tagName("input"));  
+
+        //filter by level, class, course; select students, and then assign subject combi 
+        sortByLevelCLassCourse(levelSelect, courseSelect, classOptions, driver, wait);
+    }
+
+    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+        //loop through level and filter by level
+        List<WebElement> levelOptions = levelSelect.findElements(By.tagName("option"));
+        for (WebElement option : levelOptions) {
+            option.click();
+            Thread.sleep(2000); // Wait for the page to load
+
+            //check level and execute respective function
+            String level = option.getText().trim();
+            if (level.equalsIgnoreCase("SECONDARY 1")) {
+                sec1And2SortByClass(classOptions, courseSelect, 2, driver, wait);
+            } else if (level.equalsIgnoreCase("SECONDARY 2")) {
+                sec1And2SortByClass(classOptions, courseSelect, 2, driver, wait);
+                //set the streaming conditions according to level requirements            
+            } else if (level.equalsIgnoreCase("SECONDARY 3")) {
+                sec3And4SortByClass(classOptions, courseSelect, 3, driver, wait);
+            } else if (level.equalsIgnoreCase("SECONDARY 4")) {
+                sec3And4SortByClass(classOptions, courseSelect, 4, driver, wait);
+            }
+        }
+    }
+
+    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+        //no streaming; loop through classes and select students and combi
+        for (int i=0; i<classOptions.size(); i++) {
+            classOptions.get(i).click(); // Click on the class option
+            Thread.sleep(2000); // Wait for the page to load
+
+            List<WebElement> allCheckboxTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
+
+            // check if student list appears for respective class
+            if (!allCheckboxTags.isEmpty()) {
+                WebElement selectAllStudents = allCheckboxTags.get(0);
+                WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
+
+                selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, null, level, driver, wait);
+                System.out.println("✅ Students selected for class: " + classOptions.get(i).getText());
+            }
+        }
+    }
+
+    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+        String[] streamTypes = {"express", "N(A)", "N(T)"}; 
+
+        //check each class' stream type
+        for (int i=0; i<classOptions.size()-1; i++) {
+
+        boolean foundValidStreaming = false;
+
+            // Try each of the 3 streaming types
+            for (int stream=0; stream < 3; stream++) {
+                courseSelect.findElements(By.tagName("option")).get(stream).click();  // Set streaming
+                Thread.sleep(2000); // Wait for UI update
+
+                List<WebElement> allCheckboxTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
+
+                // check if student list appears for respective streaming
+                if (!allCheckboxTags.isEmpty()) {
+                    WebElement selectAllStudents = allCheckboxTags.get(0);
+                    WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
+
+                    selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, streamTypes[stream], level, driver, wait);
+                    foundValidStreaming = true;
+                    break; // ✅ Found a valid streaming option, stop trying others
+                }
+            }
             
-//         }
-//     }
+            // end of stream loop for 1 class; if no student list for any of the streaming, throw exception
+            if (!foundValidStreaming) {
+                throw new InvalidExcpetion("No valid streaming option found");
+            }
+        }
+    }
 
-//     public void sortByClass(List<WebElement> classOptions) throws InterruptedException {
-//         //assign subjects to classes 2 by 2
-//         for (int i=0; i<classOptions.size(); i+=2) {
-//             //check 2 classes at one go
-//             classOptions.get(i).findElement(By.tagName("input")).click();
-//             Thread.sleep(2000); // Wait for the page to load
-//             classOptions.get(i+1).findElement(By.tagName("input")).click(); 
-//             Thread.sleep(2000); // Wait for the page to load      
-//         }
-//     }
+    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption {
+        Map<String, String> sec3StreamTypes = new HashMap<>() {{
+            put("express", "S3E");
+            put("N(A)", "S3N(A)");
+            put("N(T)", "S3N(T)");
+        }};
 
-//     public void selectAllStudents(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, WebDriver driver) throws InterruptedException {
-//         //select all students 
-//         selectAllStudents.click();
-//         Thread.sleep(2000); // Wait for the page to load
-//         System.out.println("✅ All students selected");
+        Map<String, String> sec4StreamTypes = new HashMap<>() {{
+            put("express", "S4E");
+            put("N(A)", "S4N(A)");
+            put("N(T)", "S4N(T)");
+        }};
 
-//         //scroll to bottom
-//         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", allSelectTags.get(3));
-//         Thread.sleep(2000); // Wait for the button to be in view
+        //select all students 
+        selectAllStudents.click();
+        Thread.sleep(2000); // Wait for the page to load
+        System.out.println("✅ All students selected");
 
+        //scroll to bottom for subject combi button to be in view
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", allSelectTags.get(3));
+        Thread.sleep(2000); // Wait for the button to be in view
 
-//         //select a proper subject combination - express SS+Geog combi
-//         List<WebElement> subjectOptions = allSelectTags.get(3).findElements(By.tagName("option"));
-//         for (WebElement option : subjectOptions) {
-//             String combi = option.getText().trim();
-//             if (combi.equalsIgnoreCase("S3E SubjectCombi SS&GEOG CL")) {
-//                 option.click();
-//                 Thread.sleep(2000); // Wait for the page to load
-//                 System.out.println("✅ Subject combination selected: " + combi);
-//                 break;
-//             }
-//         }
+        //select a proper subject combination - express SS+Geog combi
+        List<WebElement> subjectOptions = allSelectTags.get(3).findElements(By.tagName("option"));
+        for (WebElement option : subjectOptions) {
+            String combi = option.getText().trim();
+            if (level == 1) {
+                if (combi.equalsIgnoreCase("Sec 1 G3 Subject Combi")) {
+                    option.click();
+                    Thread.sleep(2000); // Wait for the page to load
+                    System.out.println("✅ Subject combination selected: " + combi);
+                    break;
+                }
+            } else if (level == 2) {
+                if (combi.equalsIgnoreCase("Sec 2 Subject Combi CL")) {
+                    option.click();
+                    Thread.sleep(2000); // Wait for the page to load
+                    System.out.println("✅ Subject combination selected: " + combi);
+                    break;
+                }
+            } else if (level == 3) {
+                if (combi.equalsIgnoreCase(sec3StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL")) {
+                    option.click();
+                    Thread.sleep(2000); // Wait for the page to load
+                    System.out.println("✅ Subject combination selected: " + combi);
+                    break;
+                }
+            } else if (level == 4) {
+                if (combi.equalsIgnoreCase(sec4StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL")) {
+                    option.click();
+                    Thread.sleep(2000); // Wait for the page to load
+                    System.out.println("✅ Subject combination selected: " + combi);
+                    break;
+                }
+            }
+        }
 
-//         //scroll to top
-//         WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(By.tagName("button")));
-//         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
+        //scroll to top
+        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(By.tagName("button")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
+        Thread.sleep(2000); // Wait for the button to be in view
 
-//         Thread.sleep(2000); // Wait for the button to be in view
+        //save the subject combination
+        saveBtn.click();
+        Thread.sleep(2000); 
 
-
-
-        
-//     }
-// }
+        //VALIDATION -> check if sve button is disable to determine save success
+        if (saveBtn.getAttribute("disabled") != null) {
+            System.out.println("✅ Subject combi saved");
+        } else {
+            throw new ValidationFailedExecption("validation failed; subject combi not saved");
+        }
+    }
+}
