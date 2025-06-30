@@ -6,12 +6,13 @@ import com.example.selenium.loading.SubjectAllocation;
 import com.example.selenium.testcases.TCA1;
 import com.example.selenium.testcases.TCA5;
 import com.example.selenium.testcases.TCA7;
-import com.example.selenium.testcases.TCA11Test;
+import com.example.selenium.testcases.TCA11;
 import com.example.selenium.testcases.TCA13;
 import com.example.selenium.testcases.TCA14;
 import com.example.selenium.testcases.TCA15;
 import com.example.selenium.testcases.TCA16;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -287,7 +288,7 @@ public class TCTest {
         WebDriverWait wait = DriverInstance.getWait();
         try {
             prepareEnvironment(driver, wait);
-            TCA11Test tca11 = new TCA11Test();
+            TCA11 tca11 = new TCA11();
             tca11.run(driver, wait);
         } catch (Exception e) {
             throw new RuntimeException(e); // rethrow so RetryAnalyzer kicks in
@@ -348,5 +349,9 @@ public class TCTest {
         } finally {
             DriverInstance.quitDriver();
         }
+    }
+    @AfterMethod
+    public void tearDown() {
+        DriverInstance.quitDriver();
     }
 }
