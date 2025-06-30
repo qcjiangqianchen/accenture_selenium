@@ -283,7 +283,7 @@ public class TCTest {
     }
 
     @Test(groups = {"tca11"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
-    public void runTCA11() throws Exception {
+    public void runTCA11Test() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
         System.out.println("✅ Test is running!");
