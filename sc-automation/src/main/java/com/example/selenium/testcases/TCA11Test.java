@@ -12,7 +12,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class TCA11 {
+public class TCA11Test {
     
     public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results by class page
