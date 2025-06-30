@@ -123,7 +123,7 @@ public class TCTest {
     }
 
     @Test(groups = {"dataDelete"})
-    private void dataDelete() {
+    public void dataDelete() {
         //run the delete scripts after all tests cases are executed to ensure that data is cleared
         // Configurations
         String psqlPath = "bin/psql/psql.exe";  // relative to your project root
@@ -212,7 +212,7 @@ public class TCTest {
     }
 
     @Test(groups = {"loginAndBypass"})
-    private void prepareEnvironment(WebDriver driver, WebDriverWait wait) throws InterruptedException { 
+    public void prepareEnvironment(WebDriver driver, WebDriverWait wait) throws InterruptedException { 
         // Landing page + login
         driver.manage().window().maximize();   //Mazimize current window
         driver.get("http://predev.schoolcockpit.local.sc/academic/results-by-subject/SEC1-01");
