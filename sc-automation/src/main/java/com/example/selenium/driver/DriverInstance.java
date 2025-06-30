@@ -22,21 +22,21 @@ public class DriverInstance {
     //getter method for the driver singleton instance
     public static WebDriver getDriver() {
         if (driver == null) {
-            EdgeOptions options = new EdgeOptions();
+            ChromeOptions options = new ChromeOptions();
             HashMap<String, Object> prefs = new HashMap<>();
             prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
             prefs.put("download.prompt_for_download", false);
             prefs.put("safebrowsing.enabled", true);
             options.setExperimentalOption("prefs", prefs);
 
-            driver = new EdgeDriver(options);
+            driver = new ChromeDriver(options);
         }
         return driver;
     }
 
     public static WebDriverWait getWait() {
         if (wait == null && driver != null) {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         }
         return wait;
     }
