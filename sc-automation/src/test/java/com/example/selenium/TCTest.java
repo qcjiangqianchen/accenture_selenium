@@ -6,7 +6,7 @@ import com.example.selenium.loading.SubjectAllocation;
 import com.example.selenium.testcases.TCA1;
 import com.example.selenium.testcases.TCA5;
 import com.example.selenium.testcases.TCA7;
-import com.example.selenium.testcases.TCA11;
+import com.example.selenium.testcases.TCA11Test;
 import com.example.selenium.testcases.TCA13;
 import com.example.selenium.testcases.TCA14;
 import com.example.selenium.testcases.TCA15;
@@ -287,7 +287,7 @@ public class TCTest {
         WebDriverWait wait = DriverInstance.getWait();
         try {
             prepareEnvironment(driver, wait);
-            TCA11 tca11 = new TCA11();
+            TCA11Test tca11 = new TCA11Test();
             tca11.run(driver, wait);
         } catch (Exception e) {
             throw new RuntimeException(e); // rethrow so RetryAnalyzer kicks in
