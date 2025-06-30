@@ -8,6 +8,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URISyntaxException;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DriverInstance {
@@ -20,16 +27,20 @@ public class DriverInstance {
     }
 
     //getter method for the driver singleton instance
-    public static WebDriver getDriver() {
+    public static WebDriver getDriver() throws MalformedURLException, URISyntaxException {
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
+
+            // Set download preferences
             HashMap<String, Object> prefs = new HashMap<>();
             prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
             prefs.put("download.prompt_for_download", false);
             prefs.put("safebrowsing.enabled", true);
             options.setExperimentalOption("prefs", prefs);
 
-            driver = new ChromeDriver(options);
+            // Create RemoteWebDriver using recommended URI.toURL() pattern
+            URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
+            driver = new RemoteWebDriver(seleniumGridUrl, options);
         }
         return driver;
     }
