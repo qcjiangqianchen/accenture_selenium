@@ -286,6 +286,7 @@ public class TCTest {
     public void runTCA11() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
+        System.out.println("✅ Test is running!");
         try {
             prepareEnvironment(driver, wait);
             TCA11 tca11 = new TCA11();
