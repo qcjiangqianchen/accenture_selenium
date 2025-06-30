@@ -58,8 +58,8 @@ DECLARE
     v_ip_dt_na_geb_school CHARACTER VARYING(2) := 'NA';
     v_mainlevel_code CHARACTER VARYING(2) := NULL;
 
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
     
     v_gep_ind CHARACTER VARYING(1) := 'N';
     v_school CHARACTER VARYING(10) := NULL;
@@ -2143,8 +2143,8 @@ begin;
 do $block$
 DECLARE 
     v_acadYear CHARACTER VARYING(4) := to_char(now(), 'YYYY'); 
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
 
     v_mainlevel_code CHARACTER VARYING(2) := NULL;
     v_school CHARACTER VARYING(10) := NULL;

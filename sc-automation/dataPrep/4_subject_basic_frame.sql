@@ -79,8 +79,8 @@ order by A.SCHOOL_CODE, a.level_xcode, a.program_ind;
 DO $BLOCK$
 DECLARE
     v_school CHARACTER VARYING(10) := NULL;
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
 	v_course_sys_code  CHARACTER VARYING(15) := NULL; 
 	v_SEQ_GPA_SYSCODE  CHARACTER VARYING(14) := NULL; 
 	v_grdscheme_sys_code CHARACTER VARYING(14) := NULL;

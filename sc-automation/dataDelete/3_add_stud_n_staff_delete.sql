@@ -54,6 +54,15 @@ BEGIN
         DELETE FROM cp01.cp_stud_profile
             WHERE school_code = v_school;
 
+        DELETE FROM cp01.cp_tt_staff_subjclass_link
+            WHERE school_code = v_school;
+        DELETE FROM cp01.cp_access_matrix_role_link
+            WHERE uid_code IN (SELECT UIN_FIN_NO FROM CP01.CP_STAFF_PROFILE  WHERE SCHOOL_CODE =v_school );
+        DELETE FROM cp01.cp_access_matrix
+            WHERE MOE_SCHOOl_CODE =v_school ;
+        DELETE FROM cp01.cp_staff_profile
+            WHERE  SCHOOL_CODE= v_school;
+
 
 \qecho '****************** PROCESS cp_staff_profile ******************'
 
@@ -74,12 +83,5 @@ BEGIN
         raise notice 'LOOP 2: %', v_school;
 
         -- remove staff profile from tables if the school is currently populated w it
-        DELETE FROM cp01.cp_tt_staff_subjclass_link
-            WHERE school_code = v_school;
-        DELETE FROM cp01.cp_access_matrix_role_link
-            WHERE uid_code IN (SELECT UIN_FIN_NO FROM CP01.CP_STAFF_PROFILE  WHERE SCHOOL_CODE =v_school );
-        DELETE FROM cp01.cp_access_matrix
-            WHERE MOE_SCHOOl_CODE =v_school ;
-        DELETE FROM cp01.cp_staff_profile
-            WHERE  SCHOOL_CODE= v_school;
+        
 		v_count := 1;

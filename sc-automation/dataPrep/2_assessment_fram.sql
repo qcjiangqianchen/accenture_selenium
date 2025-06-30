@@ -26,8 +26,8 @@ DECLARE
     v_mainlevel_code CHARACTER VARYING(2) := NULL;
     v_school CHARACTER VARYING(10) := NULL;
 
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
 
     asmt_cursor CURSOR (v_sch TEXT) FOR
     SELECT

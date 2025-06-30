@@ -26,11 +26,13 @@ import java.util.regex.Pattern;
 import java.time.Duration;
 import java.io.File;
 import java.io.IOException;
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Files;
 
 public class TCTest {
     @Test(groups = {"dataPrep"})
-    public void dataPrep() {
+    public void dataPrep() throws IOException {
         // === Configuration ===
         String psqlPath = "bin/psql/psql.exe";  // relative to your project root
         String host = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
@@ -38,7 +40,8 @@ public class TCTest {
         String dbName = "predevscpg_new";
         String username = "predevscpgadmin";
         String password = "password_predevscpgadmin";
-
+        int start_sch = 9808;
+        int end_sch = 9808;
         String folderPath = "dataPrep";  // Adjust if needed
         File folder = new File(folderPath);
 
@@ -86,16 +89,22 @@ public class TCTest {
             }
         });
 
-        for (File sqlFile : sqlFiles) {
-            System.out.println("▶️ Executing: " + sqlFile.getName());
-
+        for (File sqlFileTemp : sqlFiles) {
+            String sqlText = Files.readString(sqlFileTemp.toPath(), StandardCharsets.UTF_8);
+            String substituted = sqlText.replace("START_SCH", Integer.toString(start_sch));
+            substituted = substituted.replace("END_SCH", Integer.toString(end_sch));
+            Path tmp = Files.createTempFile("exec-", "-" + sqlFileTemp.getName());
+            Files.writeString(tmp, substituted, StandardCharsets.UTF_8);
+            tmp.toFile().deleteOnExit();
+            System.out.println("▶️ Executing: " + sqlFileTemp.getName());
+            
             ProcessBuilder pb = new ProcessBuilder(
                 psqlPath,
                 "-h", host,
                 "-p", port,
                 "-U", username,
                 "-d", dbName,
-                "-f", sqlFile.getAbsolutePath()
+                "-f", tmp.toAbsolutePath().toString()
             );
 
             pb.environment().put("PGPASSWORD", password);
@@ -105,12 +114,12 @@ public class TCTest {
                 Process process = pb.start();
                 int exitCode = process.waitFor();
                 if (exitCode == 0) {
-                    System.out.println("✅ Success: " + sqlFile.getName());
+                    System.out.println("✅ Success: " + sqlFileTemp.getName());
                 } else {
-                    System.err.println("❌ Failed: " + sqlFile.getName() + " (Exit Code " + exitCode + ")");
+                    System.err.println("❌ Failed: " + sqlFileTemp.getName() + " (Exit Code " + exitCode + ")");
                 }
             } catch (IOException | InterruptedException e) {
-                System.err.println("❌ Error executing " + sqlFile.getName() + ": " + e.getMessage());
+                System.err.println("❌ Error executing " + sqlFileTemp.getName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
         }

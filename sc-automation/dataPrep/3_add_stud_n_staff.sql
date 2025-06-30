@@ -44,8 +44,8 @@ DECLARE
     v_primary_race CHARACTER VARYING(2);
 
     v_school CHARACTER VARYING(10) := NULL;
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
     
 	context text;
 
@@ -581,8 +581,8 @@ DO $BLOCK$
 DECLARE
     v_no_of_staff INTEGER := 0;
     v_school CHARACTER VARYING(10) := NULL;
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
     v_STAFF_ID CP01.CP_STAFF_PROFILE.STAFF_ID%TYPE;
     v_CLASS_XCODE CP01.CP_ARCH_CLASS.CLASS_XCODE%TYPE;
 
@@ -659,8 +659,8 @@ order by school_code;
 BEGIN; 
 DO $BLOCK$
 DECLARE
-    v_start_sch DOUBLE PRECISION := 9808;
-    v_end_sch DOUBLE PRECISION := 9808;
+    v_start_sch DOUBLE PRECISION := START_SCH;
+    v_end_sch DOUBLE PRECISION := END_SCH;
     v_school CHARACTER VARYING(10) := NULL;
 
     get_stud_hist_promotion CURSOR (v_school_code TEXT) FOR

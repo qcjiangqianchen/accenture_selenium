@@ -34,10 +34,7 @@ BEGIN
 
         /* CAY */
         DELETE FROM cp20.cp_cur_cay_sch_asmt_frame_dtls
-            WHERE framework_sys_code IN (SELECT
-                framework_sys_code
-                FROM cp20.cp_cur_cay_sch_asmt_frame
-                WHERE school_code = v_school);
+                WHERE school_code = v_school;
         DELETE FROM cp20.cp_cur_cay_sch_asmt_frame
             WHERE school_code = v_school;
         --COMMIT;

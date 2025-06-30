@@ -11,7 +11,7 @@ public class LoginUtils {
         WebElement userNameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_User_ID")));
         WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_Password")));
 
-        userNameField.sendKeys("SCU00012@schools.gov.sg");
+        userNameField.sendKeys("SCU00014@schools.gov.sg");
         passwordField.sendKeys("Netiq000!1234");
 
         //click login
