@@ -32,8 +32,14 @@ public class DriverInstance {
     public static WebDriver getDriver() throws MalformedURLException, URISyntaxException {
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
+            String downloadDir = System.getenv("DOWNLOAD_DIR"); //get download dir of user through env variable defined in gitlab-ci.yml
             HashMap<String, Object> prefs = new HashMap<>();
-            prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
+            if (downloadDir != null && !downloadDir.isEmpty()) {
+                prefs.put("download.default_directory", downloadDir);
+            } else {
+                prefs.put("download.default_directory", System.getProperty("user.home") +"Downloads"); //fallback
+            } 
+            // prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
             prefs.put("download.prompt_for_download", false);
             prefs.put("safebrowsing.enabled", true);
             options.setExperimentalOption("prefs", prefs);
@@ -46,7 +52,7 @@ public class DriverInstance {
                 URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
                 driver = new RemoteWebDriver(seleniumGridUrl, options);
             } else {
-                WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up
+                WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
                 driver = new ChromeDriver(options); // Assumes chromedriver is in PATH
             }
         }
