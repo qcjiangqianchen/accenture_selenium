@@ -235,7 +235,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca1"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca1", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA1() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -248,24 +248,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca7"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
-    public void runTCA7() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
-        WebDriverWait wait = DriverInstance.getWait();
-        try {
-            prepareEnvironment(driver, wait);
-            TCA7 tca7 = new TCA7();
-            tca7.run(driver, wait);
-        } catch (Exception e) {
-            throw new RuntimeException(e); // rethrow so RetryAnalyzer kicks in
-        } finally {
-            if (driver != null) {
-                DriverInstance.quitDriver(); // ✅ always clean up
-            }
-        }
-    }
-
-    @Test(groups = {"tca5"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca5", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA5() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -282,7 +265,24 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca11"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca7", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    public void runTCA7() throws Exception {
+        WebDriver driver = DriverInstance.getDriver();
+        WebDriverWait wait = DriverInstance.getWait();
+        try {
+            prepareEnvironment(driver, wait);
+            TCA7 tca7 = new TCA7();
+            tca7.run(driver, wait);
+        } catch (Exception e) {
+            throw new RuntimeException(e); // rethrow so RetryAnalyzer kicks in
+        } finally {
+            if (driver != null) {
+                DriverInstance.quitDriver(); // ✅ always clean up
+            }
+        }
+    }
+
+    @Test(groups = {"tca11", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA11Test() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -300,7 +300,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca13"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca13", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA13() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -313,7 +313,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca14"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca14", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA14() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -326,7 +326,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca15"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca15", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA15() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
@@ -339,7 +339,7 @@ public class TCTest {
         }
     }
 
-    @Test(groups = {"tca16"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    @Test(groups = {"tca16", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA16() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         WebDriverWait wait = DriverInstance.getWait();
