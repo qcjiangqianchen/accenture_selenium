@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.example.selenium.setup.TCASetup;
 import com.example.selenium.utils.FileUtils;
+import com.example.selenium.utils.SeleniumUtils;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -36,7 +37,7 @@ public class TCA5 {
 
     public void TCA5_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         Actions actions = new Actions(driver);
-        TCASetup.navigateToDesiredPage(driver, wait, "//a[text()='HDP Remarks and Conduct by Class']");
+        SeleniumUtils.navigateToDesiredPage("//a[text()='HDP Remarks and Conduct by Class']");
         System.out.println("HDP Remarks and Conduct by class page chosen");
         filterByClassSubjectAssessment(driver, wait);
         // Get all table rows

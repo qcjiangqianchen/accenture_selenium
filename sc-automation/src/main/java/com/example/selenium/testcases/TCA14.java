@@ -2,6 +2,7 @@ package com.example.selenium.testcases;
 
 import com.example.selenium.setup.TCASetup;
 import com.example.selenium.utils.FileUtils;
+import com.example.selenium.utils.SeleniumUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -17,7 +18,7 @@ public class TCA14 {
     public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         // Navigate to results by class page
         System.out.println("TCA14 START");
-        TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Results'] and contains(., 'Upload')]");
+        SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'Upload')]");
 
         // TCA14.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA14_1(driver, wait);

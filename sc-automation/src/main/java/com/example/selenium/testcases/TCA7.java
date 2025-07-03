@@ -1,6 +1,7 @@
 package com.example.selenium.testcases;
 
 import com.example.selenium.setup.TCASetup;
+import com.example.selenium.utils.SeleniumUtils;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class TCA7 {
     public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results aggregated view by class 
         System.out.println("TCA7 START");
-        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Subject Remarks by Class / Teaching Group')]");
+        SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Subject Remarks by Class / Teaching Group')]");
 
         //TCA7.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA7_1(driver, wait); 

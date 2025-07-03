@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.example.selenium.setup.TCASetup;
+import com.example.selenium.utils.SeleniumUtils;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -99,7 +100,7 @@ public class TCA1 {
     // }
 
     public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        TCASetup.navigateToDesiredPage(driver, wait, "//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
+        SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
         Thread.sleep(sleepduration);
         System.out.println("Results Cutoff page chosen");
 

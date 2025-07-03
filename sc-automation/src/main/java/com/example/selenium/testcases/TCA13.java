@@ -3,6 +3,7 @@ package com.example.selenium.testcases;
 import java.util.*;
 
 import com.example.selenium.setup.TCASetup;
+import com.example.selenium.utils.SeleniumUtils;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,7 +14,7 @@ public class TCA13 {
     public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //navigate to results by student page
         System.out.println("TCA13 START");
-        TCASetup.navigateToDesiredPage(driver, wait, "//a[.//span[text()='Results'] and contains(., 'by Student')]");
+        SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'by Student')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
         TCA13_1(driver, wait); 
