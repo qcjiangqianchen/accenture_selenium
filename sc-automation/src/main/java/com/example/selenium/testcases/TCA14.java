@@ -1,6 +1,5 @@
 package com.example.selenium.testcases;
 
-import com.example.selenium.setup.TCASetup;
 import com.example.selenium.utils.FileUtils;
 import com.example.selenium.utils.SeleniumUtils;
 

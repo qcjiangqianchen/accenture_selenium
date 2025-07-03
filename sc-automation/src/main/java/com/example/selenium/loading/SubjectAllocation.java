@@ -1,6 +1,5 @@
 package com.example.selenium.loading;
 
-import com.example.selenium.setup.TCASetup;
 import com.example.selenium.utils.SeleniumUtils;
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.exception.ValidationFailedExecption;

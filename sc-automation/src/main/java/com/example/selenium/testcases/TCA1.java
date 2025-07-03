@@ -10,8 +10,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.example.selenium.setup.TCASetup;
 import com.example.selenium.utils.SeleniumUtils;
 
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -31,7 +29,7 @@ public class TCA1 {
     static boolean breaker = false;
     static long sleepduration = 1000; // 1 second
 
-    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver, WebDriverWait wait) throws Exception {
         System.out.println("TCA1 START");
         // Run scenarios
         String[] scenarios = {"HDP Remarks and Conduct", "Personal Qualities", "Subject Grade", "Subject Remarks", "Subject Results"};
@@ -99,7 +97,7 @@ public class TCA1 {
     //     } catch (Exception ignored) {}
     // }
 
-    public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws Exception {
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
         Thread.sleep(sleepduration);
         System.out.println("Results Cutoff page chosen");
@@ -111,9 +109,9 @@ public class TCA1 {
                 By.cssSelector("select.custom-select.academicYear"))));
         scenarioDropdown.selectByValue(scenarioCode);
         Thread.sleep(sleepduration); 
-        Select lockDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("select.custom-select[style*='max-width: 100px']"))));
         String inputFieldId = "";
-        Thread.sleep(sleepduration); 
+        Select lockDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("select.custom-select[style*='max-width: 100px']"))));
+        
         if ("By Level".equals(lockSetup)) {
             lockDropdown.selectByValue("By Level");
             inputFieldId = "cutoffDate_31%7C0_113";
@@ -121,18 +119,12 @@ public class TCA1 {
             lockDropdown.selectByValue("By Class");
             inputFieldId = "cutoffDate_31%7CSEC1-01%7C0_113";
         }
-        Thread.sleep(sleepduration); 
-        WebElement inputField = wait.until(ExpectedConditions.elementToBeClickable(By.id(inputFieldId)));
+        Thread.sleep(sleepduration);
         String date = String.format("%02d", new Random().nextInt(28) + 1);
         String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
         String month = months[new Random().nextInt(months.length)];
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", inputField);
-        Thread.sleep(sleepduration); 
-        inputField.click();
-        inputField.clear();
-        inputField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE)); // force clear
-        inputField.sendKeys(date + " " + month + " 2025");
-        inputField.sendKeys(Keys.ENTER);
+        SeleniumUtils.scrollToElement(By.id(inputFieldId));
+        SeleniumUtils.typeText(By.id(inputFieldId), date + " " + month + " 2025");
         System.out.println("Field filled");
         Thread.sleep(sleepduration);
         WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Save']")));
