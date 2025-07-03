@@ -44,13 +44,16 @@ public class TCA1 {
         System.out.println("✅ TCA1 END");
     }
     public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws Exception {
+        String date = String.format("%02d", new Random().nextInt(28) + 1);
+        String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+        String month = months[new Random().nextInt(months.length)];
+        String scenarioCode = scenarioCodeDict.get(scenario);
+
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'child-module')]//a[contains(normalize-space(), 'Cut-Off')]");
         System.out.println("Results Cutoff page chosen");
-
-        String scenarioCode = scenarioCodeDict.get(scenario);
-        System.out.println("Scenario: " + scenarioCode);
         SeleniumUtils.waitForElementToBeVisible(By.cssSelector("select.custom-select.academicYear"));
         SeleniumUtils.selectDropdownByValue(By.cssSelector("select.custom-select.academicYear"), scenarioCode);
+        System.out.println("Scenario: " + scenarioCode);
         SeleniumUtils.waitForElementToBeVisible(By.cssSelector("select.custom-select[style*='max-width: 100px']"));
         SeleniumUtils.selectDropdownByValue(By.cssSelector("select.custom-select[style*='max-width: 100px']"), lockSetup);
         String inputFieldId = "";
@@ -59,15 +62,12 @@ public class TCA1 {
         } else if ("By Class".equals(lockSetup)) {
             inputFieldId = "cutoffDate_31%7CSEC1-01%7C0_113";
         }
-        String date = String.format("%02d", new Random().nextInt(28) + 1);
-        String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
-        String month = months[new Random().nextInt(months.length)];
+        
         SeleniumUtils.waitForElementToBeVisible(By.id(inputFieldId));
         SeleniumUtils.scrollToElement(By.id(inputFieldId));
         SeleniumUtils.typeText(By.id(inputFieldId), date + " " + month + " 2025", true);
         System.out.println("Field filled");
         SeleniumUtils.clickElement(By.xpath("//button[text()='Save']"));
-
         System.out.println("Saved");
         System.out.println("Test A1 for: " + scenario + " , " + lockSetup + " passed");
     }
