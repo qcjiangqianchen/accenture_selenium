@@ -23,20 +23,19 @@ public class SeleniumUtils{
         List <WebElement> nav_btns = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn")));
         WebElement btn = nav_btns.get(1);
         btn.click();
-        Thread.sleep(1000); // Wait for the page to load
 
         //menu to go to results by class
-        WebElement page_btn = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(desiredPage)));
-        page_btn.click();
-        Thread.sleep(2000); // Wait for the page to load
+        SeleniumUtils.clickElement(By.xpath(desiredPage));
 
         System.out.println("✅ Navigated to Results by Class page");
     }
 
-    public static void typeText(By locator, String text) {
+    public static void typeText(By locator, String text, boolean pressEnter) {
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
         element.clear();
         element.sendKeys(text);
+        if (pressEnter)
+            element.sendKeys(Keys.ENTER);
     }
 
     public static String getText(By locator) {
@@ -61,16 +60,16 @@ public class SeleniumUtils{
         dropdown.selectByValue(value);
     }
 
-    public static void waitForElementToBeVisible(By locator, int timeoutSeconds) throws Exception {
-        new WebDriverWait(DriverInstance.getDriver(), Duration.ofSeconds(timeoutSeconds))
+    public static void waitForElementToBeVisible(By locator){
+        DriverInstance.getWait()
             .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public static void waitForElementToDisappear(By locator, int timeoutSeconds) throws Exception {
-        new WebDriverWait(DriverInstance.getDriver(), Duration.ofSeconds(timeoutSeconds))
+    public static void waitForElementToDisappear(By locator){
+        DriverInstance.getWait()
             .until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
-    
+
     public static void scrollToElement(By locator) throws Exception {
         WebElement element = DriverInstance.getDriver().findElement(locator);
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
