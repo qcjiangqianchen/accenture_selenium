@@ -29,7 +29,7 @@ public class DriverInstance {
     }
 
     //getter method for the driver singleton instance
-    public static WebDriver getDriver() throws MalformedURLException, URISyntaxException {
+    public static WebDriver getDriver() throws Exception{
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
             String downloadDir = System.getenv("DOWNLOAD_DIR"); //get download dir of user through env variable defined in gitlab-ci.yml
