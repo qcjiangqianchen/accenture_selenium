@@ -30,7 +30,16 @@ public class TCTest {
     @Test(groups = {"dataPrep"})
     public void dataPrep() throws IOException {
         // === Configuration ===
-        String psqlPath = "psql";  // relative to your project root
+        String psqlPath = "";
+        String runEnv = System.getenv("CI");
+        if ("true".equalsIgnoreCase(runEnv)) 
+        {
+            psqlPath = "psql";
+        } 
+        else
+        {
+            psqlPath = "bin/psql/psql.exe";
+        }
         String host = "dbs-aurora-predevezapp-predevsccluster03.cluster-cgw632hbyo27.ap-southeast-1.rds.amazonaws.com";
         String port = "5432";
         String dbName = "predevscpg_new";
