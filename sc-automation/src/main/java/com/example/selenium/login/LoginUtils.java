@@ -10,10 +10,16 @@ public class LoginUtils {
         //login inputs
         WebElement userNameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_User_ID")));
         WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_Password")));
-
-        userNameField.sendKeys(System.getenv("LOGIN_USERNAME"));
-        passwordField.sendKeys(System.getenv("LOGIN_PASSWORD"));
-
+        if ("true".equalsIgnoreCase(System.getenv("CI")))
+        {
+            userNameField.sendKeys(System.getenv("LOGIN_USERNAME"));
+            passwordField.sendKeys(System.getenv("LOGIN_PASSWORD"));
+        }
+        else
+        {
+            userNameField.sendKeys("SCU00014@schools.gov.sg");
+            passwordField.sendKeys("Netiq000!1234");
+        }
         //click login
         wait.until(ExpectedConditions.elementToBeClickable(By.name("loginButton2"))).click();
         Thread.sleep(2000); // Wait for the page to load
