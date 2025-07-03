@@ -16,6 +16,7 @@ public class SeleniumUtils{
     public static void clickElement(By locator) {
         DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(locator)).click();
     }
+
     public static void navigateToDesiredPage(String desiredPage) throws InterruptedException
     {
         //nav btns at top of page
@@ -31,6 +32,7 @@ public class SeleniumUtils{
 
         System.out.println("✅ Navigated to Results by Class page");
     }
+
     public static void typeText(By locator, String text) {
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
         element.clear();
@@ -48,6 +50,7 @@ public class SeleniumUtils{
             return false;
         }
     }
+
     public static void selectDropdownByVisibleText(By locator, String visibleText) {
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
         dropdown.selectByVisibleText(visibleText);
@@ -57,6 +60,7 @@ public class SeleniumUtils{
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
         dropdown.selectByValue(value);
     }
+
     public static void waitForElementToBeVisible(By locator, int timeoutSeconds) throws Exception {
         new WebDriverWait(DriverInstance.getDriver(), Duration.ofSeconds(timeoutSeconds))
             .until(ExpectedConditions.visibilityOfElementLocated(locator));
@@ -66,6 +70,7 @@ public class SeleniumUtils{
         new WebDriverWait(DriverInstance.getDriver(), Duration.ofSeconds(timeoutSeconds))
             .until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
+    
     public static void scrollToElement(By locator) throws Exception {
         WebElement element = DriverInstance.getDriver().findElement(locator);
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
