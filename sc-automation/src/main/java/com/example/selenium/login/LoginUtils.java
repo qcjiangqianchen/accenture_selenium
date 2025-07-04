@@ -4,38 +4,40 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.example.selenium.utils.SeleniumUtils;
+
 public class LoginUtils {
     
     public static void Login(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         //login inputs
-        WebElement userNameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_User_ID")));
-        WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("Ecom_Password")));
+        
         if ("true".equalsIgnoreCase(System.getenv("CI")))
         {
-            userNameField.sendKeys(System.getenv("LOGIN_USERNAME"));
-            passwordField.sendKeys(System.getenv("LOGIN_PASSWORD"));
+            SeleniumUtils.typeText(By.name("Ecom_User_ID"), System.getenv("LOGIN_USERNAME"), false);
+            SeleniumUtils.typeText(By.name("Ecom_Password"), System.getenv("LOGIN_PASSWORD"), false);
         }
         else
         {
-            userNameField.sendKeys("SCU00014@schools.gov.sg");
-            passwordField.sendKeys("Netiq000!1234");
+            SeleniumUtils.typeText(By.name("Ecom_User_ID"), "SCU00014@schools.gov.sg", false);
+            SeleniumUtils.typeText(By.name("Ecom_Password"), "Netiq000!1234", false);
         }
         //click login
-        wait.until(ExpectedConditions.elementToBeClickable(By.name("loginButton2"))).click();
+        SeleniumUtils.clickElement(By.name("loginButton2"));
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ Login successful");
     }
 
     public static void warningBypass(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        try {
-            wait.until(ExpectedConditions.titleContains("Form is not secure"));
-            WebElement sendAnywayBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("proceed-button")));
-            sendAnywayBtn.click();
-        } catch (TimeoutException e) {
-            System.out.println("Timeout; no warning messsage page");
-        } catch (NoSuchElementException e) {
-            System.out.println("No warning message found, proceeding with the test");
-        }
+        // try {
+        //     wait.until(ExpectedConditions.titleContains("Form is not secure"));
+        //     SeleniumUtils.clickElement(By.id("proceed-button"));
+        // } catch (TimeoutException e) {
+        //     System.out.println("Timeout; no warning messsage page");
+        // } catch (NoSuchElementException e) {
+        //     System.out.println("No warning message found, proceeding with the test");
+        // }
+        SeleniumUtils.waitForElementToBeVisible(By.id("proceed-button"));
+        SeleniumUtils.clickElement(By.id("proceed-button"));
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ Bypassed warning page");
     }

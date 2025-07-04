@@ -50,8 +50,7 @@ public class TCA14 {
     public void downloadReport(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
         Set<String> before = FileUtils.getFilesBeforeDownload();
         // Click on the download button
-        WebElement downloadIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
-        downloadIcon.click();
+        SeleniumUtils.clickElement(By.cssSelector("svg-icon[icon_name='download']"));
         Thread.sleep(2000); // Wait for the download to complete
         Path filePath = FileUtils.waitForNewDownload(before, 15);
         updateCsvWithRemarks(filePath);
