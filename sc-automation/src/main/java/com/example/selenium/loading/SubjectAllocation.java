@@ -16,14 +16,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SubjectAllocation {
     
-    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver) throws InterruptedException {
         //navigate to subject allocation page
         System.out.println("Subject Allocation START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Subject'] and contains(., 'Allocation')]");
 
         //subject allocation: assigning subject combinations to students in classes
         try {
-            filterByYearLevelCourse(driver, wait);
+            filterByYearLevelCourse(driver);
         } catch (ValidationFailedExecption e) {
             System.out.println("❌ Validation failed: " + e.getMessage());
         } catch (InvalidExcpetion e) {
@@ -35,9 +35,9 @@ public class SubjectAllocation {
 
     }
 
-    public void filterByYearLevelCourse(WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption {
+    public void filterByYearLevelCourse(WebDriver driver) throws InterruptedException, ValidationFailedExecption {
         //get all select tags
-        List<WebElement> allSelectTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
+        List<WebElement> allSelectTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
          System.out.println("✅ allSelectTags count: " + allSelectTags.size());  // 👈 add this line
 
         if (allSelectTags.size() < 3) {
@@ -54,16 +54,16 @@ public class SubjectAllocation {
 
 
         //get class dropdown
-        WebElement classSelect = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("multiselect-dropdown")));
+        WebElement classSelect = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.className("multiselect-dropdown")));
         classSelect.click(); // Click to open the class dropdown
         Thread.sleep(2000); // Wait for the dropdown to open
         List<WebElement> classOptions = classSelect.findElements(By.tagName("ul")).get(1).findElements(By.tagName("input"));  
 
         //filter by level, class, course; select students, and then assign subject combi 
-        sortByLevelCLassCourse(levelSelect, courseSelect, classOptions, driver, wait);
+        sortByLevelCLassCourse(levelSelect, courseSelect, classOptions, driver);
     }
 
-    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
         //loop through level and filter by level
         List<WebElement> levelOptions = levelSelect.findElements(By.tagName("option"));
         for (WebElement option : levelOptions) {
@@ -73,38 +73,38 @@ public class SubjectAllocation {
             //check level and execute respective function
             String level = option.getText().trim();
             if (level.equalsIgnoreCase("SECONDARY 1")) {
-                sec1And2SortByClass(classOptions, courseSelect, 2, driver, wait);
+                sec1And2SortByClass(classOptions, courseSelect, 2, driver);
             } else if (level.equalsIgnoreCase("SECONDARY 2")) {
-                sec1And2SortByClass(classOptions, courseSelect, 2, driver, wait);
+                sec1And2SortByClass(classOptions, courseSelect, 2, driver);
                 //set the streaming conditions according to level requirements            
             } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-                sec3And4SortByClass(classOptions, courseSelect, 3, driver, wait);
+                sec3And4SortByClass(classOptions, courseSelect, 3, driver);
             } else if (level.equalsIgnoreCase("SECONDARY 4")) {
-                sec3And4SortByClass(classOptions, courseSelect, 4, driver, wait);
+                sec3And4SortByClass(classOptions, courseSelect, 4, driver);
             }
         }
     }
 
-    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
         //no streaming; loop through classes and select students and combi
         for (int i=0; i<classOptions.size(); i++) {
             classOptions.get(i).click(); // Click on the class option
             Thread.sleep(2000); // Wait for the page to load
 
-            List<WebElement> allCheckboxTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
+            List<WebElement> allCheckboxTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
 
             // check if student list appears for respective class
             if (!allCheckboxTags.isEmpty()) {
                 WebElement selectAllStudents = allCheckboxTags.get(0);
                 WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
 
-                selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, null, level, driver, wait);
+                selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, null, level, driver);
                 System.out.println("✅ Students selected for class: " + classOptions.get(i).getText());
             }
         }
     }
 
-    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
         String[] streamTypes = {"express", "N(A)", "N(T)"}; 
 
         //check each class' stream type
@@ -117,14 +117,14 @@ public class SubjectAllocation {
                 courseSelect.findElements(By.tagName("option")).get(stream).click();  // Set streaming
                 Thread.sleep(2000); // Wait for UI update
 
-                List<WebElement> allCheckboxTags = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
+                List<WebElement> allCheckboxTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
 
                 // check if student list appears for respective streaming
                 if (!allCheckboxTags.isEmpty()) {
                     WebElement selectAllStudents = allCheckboxTags.get(0);
                     WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
 
-                    selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, streamTypes[stream], level, driver, wait);
+                    selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, streamTypes[stream], level, driver);
                     foundValidStreaming = true;
                     break; // ✅ Found a valid streaming option, stop trying others
                 }
@@ -137,7 +137,7 @@ public class SubjectAllocation {
         }
     }
 
-    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver, WebDriverWait wait) throws InterruptedException, ValidationFailedExecption {
+    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption {
         Map<String, String> sec3StreamTypes = new HashMap<>() {{
             put("express", "S3E");
             put("N(A)", "S3N(A)");
@@ -195,7 +195,7 @@ public class SubjectAllocation {
         }
 
         //scroll to top
-        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(By.tagName("button")));
+        WebElement saveBtn = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("button")));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
         Thread.sleep(2000); // Wait for the button to be in view
 

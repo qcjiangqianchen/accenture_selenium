@@ -20,9 +20,7 @@ public class SeleniumUtils{
     public static void navigateToDesiredPage(String desiredPage) throws InterruptedException
     {
         //nav btns at top of page
-        List <WebElement> nav_btns = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn")));
-        WebElement btn = nav_btns.get(1);
-        btn.click();
+        SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'site-new-menu')]//a[@data-target='#megaMenu-management2']"));
 
         //menu to go to results by class
         SeleniumUtils.clickElement(By.xpath(desiredPage));
@@ -60,13 +58,13 @@ public class SeleniumUtils{
         dropdown.selectByValue(value);
     }
 
-    public static void waitForElementToBeVisible(By locator){
-        DriverInstance.getWait()
+    public static WebElement waitForElementToBeVisible(By locator){
+        return DriverInstance.getWait()
             .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public static void waitForElementToDisappear(By locator){
-        DriverInstance.getWait()
+    public static boolean waitForElementToDisappear(By locator){
+        return DriverInstance.getWait()
             .until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 

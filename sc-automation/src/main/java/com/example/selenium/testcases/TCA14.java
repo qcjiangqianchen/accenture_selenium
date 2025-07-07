@@ -1,5 +1,6 @@
 package com.example.selenium.testcases;
 
+import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.FileUtils;
 import com.example.selenium.utils.SeleniumUtils;
 
@@ -14,31 +15,31 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA14 {
     
-    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver) throws InterruptedException {
         // Navigate to results by class page
         System.out.println("TCA14 START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'Upload')]");
 
         // TCA14.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA14_1(driver, wait);
+        TCA14_1(driver);
 
         System.out.println("✅ TCA14 END");
     }
 
-    public void TCA14_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA14_1(WebDriver driver) throws InterruptedException {
         try {
-            filterByLevelAndData(driver, wait);
+            filterByLevelAndData(driver);
 
-            downloadReport(driver, wait);
+            downloadReport(driver);
         } catch (IOException e) {
             System.err.println("Error during file operations: " + e.getMessage());
         }
     
     }
 
-    public void filterByLevelAndData(WebDriver driver, WebDriverWait wait) throws InterruptedException{
+    public void filterByLevelAndData(WebDriver driver) throws InterruptedException{
         //filter by level
-        List<WebElement> selectDropdowns = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
+        List<WebElement> selectDropdowns = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
         selectDropdowns.get(0).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the first dropdown
         Thread.sleep(2000); // Wait for the page to load
 
@@ -47,8 +48,12 @@ public class TCA14 {
         Thread.sleep(2000); // Wait for the page to load
     }
 
-    public void downloadReport(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
+    public void downloadReport(WebDriver driver) throws InterruptedException, IOException {
         Set<String> before = FileUtils.getFilesBeforeDownload();
+        if (before == null || before.isEmpty()) {
+            System.out.println("❌ No files found before download.");
+            return; // Skip to the next iteration if no files were found
+        }
         // Click on the download button
         SeleniumUtils.clickElement(By.cssSelector("svg-icon[icon_name='download']"));
         Thread.sleep(2000); // Wait for the download to complete

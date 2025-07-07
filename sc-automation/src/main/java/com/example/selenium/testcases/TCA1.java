@@ -28,7 +28,7 @@ public class TCA1 {
 
     static boolean breaker = false;
 
-    public void run(WebDriver driver, WebDriverWait wait) throws Exception {
+    public void run(WebDriver driver) throws Exception {
         System.out.println("TCA1 START");
         // Run scenarios
         String[] scenarios = {"HDP Remarks and Conduct", "Personal Qualities", "Subject Grade", "Subject Remarks", "Subject Results"};
@@ -36,14 +36,14 @@ public class TCA1 {
 
         for (String scenario : scenarios) {
             for (String lock : lockTypes) {
-                TCA1_1(scenario, lock, driver, wait);
+                TCA1_1(scenario, lock, driver);
             }
         }
 
         System.out.println("All Tests Passed");
         System.out.println("✅ TCA1 END");
     }
-    public void TCA1_1(String scenario, String lockSetup, WebDriver driver, WebDriverWait wait) throws Exception {
+    public void TCA1_1(String scenario, String lockSetup, WebDriver driver) throws Exception {
         String date = String.format("%02d", new Random().nextInt(28) + 1);
         String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
         String month = months[new Random().nextInt(months.length)];

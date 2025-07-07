@@ -60,9 +60,10 @@ public class DriverInstance {
     }
 
     public static WebDriverWait getWait() {
-        if (wait == null && driver != null) {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        }
+        // if (wait == null && driver != null) {
+        //     wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // }
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait;
     }
 

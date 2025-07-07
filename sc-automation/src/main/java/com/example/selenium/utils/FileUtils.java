@@ -8,6 +8,9 @@ public class FileUtils {
 
     public static Set<String> getFilesBeforeDownload() {
         Path downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads");
+        if (downloadsPath.toFile().list()== null) {
+            return null;
+        }
         return Arrays.stream(downloadsPath.toFile().list()).collect(Collectors.toSet());
     }    
 

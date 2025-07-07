@@ -1,5 +1,6 @@
 package com.example.selenium.testcases;
 
+import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.SeleniumUtils;
 
 import java.util.*;
@@ -11,56 +12,56 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA15 {
     
-    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver) throws InterruptedException {
         //navigate to results aggregated view by class 
         System.out.println("TCA15 START");
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA15_1(driver, wait); 
+        TCA15_1(driver); 
 
         System.out.println("TCA15 END");
     }
 
-    public void TCA15_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA15_1(WebDriver driver) throws InterruptedException {
         //TCA15.1.1: filter by class,assessment
-        filterByClassAndAssessment(driver, wait);
+        filterByClassAndAssessment(driver);
 
         //TCA15.1.2: highlight each row in the main table
-        highlightRow(driver, wait); // Highlight the first row as an example
+        highlightRow(driver); // Highlight the first row as an example
     }
 
-    public void filterByClassAndAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {   
+    public void filterByClassAndAssessment(WebDriver driver) throws InterruptedException {   
         //navigate to level nav tab
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
+        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ level nav tab accessed");
 
         //filter by level
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
+        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ level chosen"); 
 
         //filter by class
-        WebElement classContainer = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
+        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
         List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
         classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ class chosen");
 
         //filter by asessment
-        WebElement assessmentSelect = wait.until(ExpectedConditions.elementToBeClickable(By.tagName("select")));
+        WebElement assessmentSelect = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("select")));
         assessmentSelect.findElements(By.tagName("option")).get(0).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ assessment chosen");
     }
 
-    public void highlightRow(WebDriver driver, WebDriverWait wait) {
+    public void highlightRow(WebDriver driver) {
         //header reference to scroll back to top
-        WebElement header = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("header")));
+        WebElement header = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.tagName("header")));
 
         //get all rows
-        WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
         List<WebElement> rows = mainTable.findElements(By.cssSelector("tr:not(.child_table)"));
 
         Actions actions = new Actions(driver);

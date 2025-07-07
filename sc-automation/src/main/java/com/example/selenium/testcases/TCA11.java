@@ -1,5 +1,6 @@
 package com.example.selenium.testcases;
 
+import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.FileUtils;
 import com.example.selenium.utils.SeleniumUtils;
 
@@ -14,56 +15,60 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA11 {
     
-    public void run(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void run(WebDriver driver) throws InterruptedException {
         //navigate to results by class page
         System.out.println("TCA11 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
 
         //TCA11.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA11_1(driver, wait);
+        TCA11_1(driver);
 
         //TCA11.2: download CSV file for each term; update CSV file with remarks
-        TCA11_2(driver, wait);
+        TCA11_2(driver);
         
         System.out.println("✅ TCA11 END");
     }
 
-    public void TCA11_1(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA11_1(WebDriver driver) throws InterruptedException {
         //TCA11.1.1: filter by class, subject, and assessment
-        filterByClassSubjectAssessment(driver, wait);
+        filterByClassSubjectAssessment(driver);
 
         //loop through each term in the main table
-        WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
 
         //TCA11.1.2/11.1.3/11.1.4: expand/collapse each tab, input marks for each student, save marks for each term
         for (int i=0; i<expandCollaspeIcon.size(); i++) {
-            expandCollaspeTerm(driver, wait, i);
-            inputMarks(driver, wait);
-            saveMarks(driver, wait);    
-            expandCollaspeTerm(driver, wait, i); // Collapse the term after inputting marks
+            expandCollaspeTerm(driver, i);
+            inputMarks(driver);
+            saveMarks(driver);    
+            expandCollaspeTerm(driver, i); // Collapse the term after inputting marks
             Thread.sleep(2000); // Wait for the term to expand/collapse
             System.out.println("✅ Term " + (i + 1) + " processed");
         }
     }
 
-    public void TCA11_2(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void TCA11_2(WebDriver driver) throws InterruptedException {
         // filterByClassSubjectAssessment(driver, wait);
         
         //loop through each term in the main table
-        WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
 
         //TCA11.2.1/2.2/2.3: expand/collapse each tab, download file, and make edits to remarks
         for (int i = 0; i < expandCollaspeIcon.size(); i++) {
             try {
-                expandCollaspeTerm(driver, wait, i);
+                expandCollaspeTerm(driver, i);
                 Set<String> before = FileUtils.getFilesBeforeDownload();
-                WebElement downloadIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
+                if (before == null || before.isEmpty()) {
+                    System.out.println("❌ No files found before download.");
+                    continue; // Skip to the next iteration if no files were found
+                }
+                WebElement downloadIcon = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
                 downloadIcon.click();
                 Path filePath = FileUtils.waitForNewDownload(before, 15);
                 updateCsvWithRemarks(filePath);
-                expandCollaspeTerm(driver, wait, i);
+                expandCollaspeTerm(driver, i);
             } catch (IOException e) {
                 System.out.println("❌ Error updating CSV file: " + e.getMessage());
             } 
@@ -71,26 +76,26 @@ public class TCA11 {
         }
     }
 
-    public void filterByClassSubjectAssessment(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public void filterByClassSubjectAssessment(WebDriver driver) throws InterruptedException {
         //navigate to level nav tab
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
+        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ level nav tab accessed");
 
         //filter by level
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
+        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ level chosen"); 
 
         //filter by class
-        WebElement classContainer = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
+        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
         List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
         classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ class chosen");
 
         //filter by subject
-        WebElement searchContainer = wait.until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
+        WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         WebElement subjectSelect = searchContainer.findElement(By.tagName("select"));
         List<WebElement> options = subjectSelect.findElements(By.tagName("option"));
         options.get(1).click(); // Select the second option (e.g., 'English Language')
@@ -107,16 +112,16 @@ public class TCA11 {
         System.out.println("TCA11.1.1 successful");
     }
 
-    public void expandCollaspeTerm(WebDriver driver, WebDriverWait wait, int index) throws InterruptedException {
+    public void expandCollaspeTerm(WebDriver driver, int index) throws InterruptedException {
         //expand term
-        WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", expandCollaspeIcon.get(index));
         System.out.println("✅ term " + (index + 1) + " expanded/collasped");
     }
 
-    public void inputMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        WebElement mainTable = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+    public void inputMarks(WebDriver driver) throws InterruptedException {
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> rows = mainTable.findElements(By.cssSelector("tr:not(.child_table)"));
         for (WebElement row:rows) {
             try {
@@ -135,8 +140,8 @@ public class TCA11 {
         }
     }
 
-    public void saveMarks(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        WebElement searchContainer = wait.until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
+    public void saveMarks(WebDriver driver) throws InterruptedException {
+        WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
         Thread.sleep(2000); // Wait for the button to be in view
