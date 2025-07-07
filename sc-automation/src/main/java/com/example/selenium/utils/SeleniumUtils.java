@@ -77,4 +77,14 @@ public class SeleniumUtils{
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(locator));
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].click();", element);
     }
+
+    public static List<WebElement> getAllDropdowns() throws Exception {
+        return DriverInstance.getDriver().findElements(By.tagName("select"));
+    }
+    public static List<WebElement> getMinimumNumberOfDropdowns(int expectedCount) throws Exception {
+        return DriverInstance.getWait().until(driver1 -> {
+            List<WebElement> dropdowns = driver1.findElements(By.tagName("select"));
+            return dropdowns.size() >= expectedCount ? dropdowns : null;
+        });
+    }
 }

@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA14 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         // Navigate to results by class page
         System.out.println("TCA14 START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'Upload')]");
@@ -24,12 +24,12 @@ public class TCA14 {
         TCA14_1(driver);
 
         System.out.println("✅ TCA14 END");
+        Thread.sleep(10000);
     }
 
-    public void TCA14_1(WebDriver driver) throws InterruptedException {
+    public void TCA14_1(WebDriver driver) throws Exception {
         try {
             filterByLevelAndData(driver);
-
             downloadReport(driver);
         } catch (IOException e) {
             System.err.println("Error during file operations: " + e.getMessage());
@@ -37,9 +37,9 @@ public class TCA14 {
     
     }
 
-    public void filterByLevelAndData(WebDriver driver) throws InterruptedException{
+    public void filterByLevelAndData(WebDriver driver) throws Exception{
         //filter by level
-        List<WebElement> selectDropdowns = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
+        List<WebElement> selectDropdowns = SeleniumUtils.getMinimumNumberOfDropdowns(2);
         selectDropdowns.get(0).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the first dropdown
         Thread.sleep(2000); // Wait for the page to load
 
@@ -48,7 +48,7 @@ public class TCA14 {
         Thread.sleep(2000); // Wait for the page to load
     }
 
-    public void downloadReport(WebDriver driver) throws InterruptedException, IOException {
+    public void downloadReport(WebDriver driver) throws Exception {
         Set<String> before = FileUtils.getFilesBeforeDownload();
         if (before == null || before.isEmpty()) {
             System.out.println("❌ No files found before download.");
