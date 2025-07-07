@@ -51,23 +51,23 @@ public class TCA13 {
         System.out.println("✅ level chosen"); 
 
         //filter by class
-        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
+        WebElement classContainer = SeleniumUtils.waitForElementToBeVisible(By.id("megaMenu-level-tab-33"));
         List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
         classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ class chosen");
 
         //filter by student
-        WebElement studentSelect = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("select")));
+        WebElement studentSelect = SeleniumUtils.waitForElementToBeVisible(By.tagName("select"));
         studentSelect.findElements(By.tagName("option")).get(1).click();
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ student chosen");
 
         //filter by asessment
-        DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.className("dropdown-btn"))).click();
+        SeleniumUtils.clickElement(By.className("dropdown-btn"));
         Thread.sleep(2000); // Wait for the dropdown to open
         System.out.println("✅ assessment dropdown opened");
-        DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.className("dropdown-btn"))).click();
+        SeleniumUtils.clickElement(By.className("dropdown-btn"));
         Thread.sleep(2000); // Wait for the dropdown to open
         System.out.println("✅ assessment dropdown opened");
         System.out.println("TCA13.1.2 successful");

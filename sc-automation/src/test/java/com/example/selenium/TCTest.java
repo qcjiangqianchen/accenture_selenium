@@ -6,6 +6,7 @@ import com.example.selenium.loading.SubjectAllocation;
 import com.example.selenium.testcases.TCA1;
 import com.example.selenium.testcases.TCA5;
 import com.example.selenium.testcases.TCA7;
+import com.example.selenium.testcases.TCB1;
 import com.example.selenium.testcases.TCA11;
 import com.example.selenium.testcases.TCA13;
 import com.example.selenium.testcases.TCA14;
@@ -348,6 +349,19 @@ public class TCTest {
             prepareEnvironment(driver);
             TCA16 tca16 = new TCA16();
             tca16.run(driver);
+        } finally {
+            DriverInstance.quitDriver();
+        }
+    }
+
+    @Test(groups = {"tcb1", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    public void runTCB1() throws Exception {
+        WebDriver driver = DriverInstance.getDriver();
+        
+        try {
+            prepareEnvironment(driver);
+            TCB1 tcb1 = new TCB1();
+            tcb1.run(driver);
         } finally {
             DriverInstance.quitDriver();
         }

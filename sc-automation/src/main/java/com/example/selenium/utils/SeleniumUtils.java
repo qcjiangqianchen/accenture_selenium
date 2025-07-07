@@ -52,9 +52,17 @@ public class SeleniumUtils{
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
         dropdown.selectByVisibleText(visibleText);
     }
+    public static void selectDropdownByVisibleText(WebElement element, String value) {
+        Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
+        dropdown.selectByVisibleText(value);
+    }
 
     public static void selectDropdownByValue(By locator, String value) {
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
+        dropdown.selectByValue(value);
+    }
+    public static void selectDropdownByValue(WebElement element, String value) {
+        Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
         dropdown.selectByValue(value);
     }
 

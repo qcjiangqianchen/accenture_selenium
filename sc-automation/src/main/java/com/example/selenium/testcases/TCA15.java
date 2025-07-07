@@ -12,7 +12,7 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA15 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         //navigate to results aggregated view by class 
         System.out.println("TCA15 START");
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
@@ -23,7 +23,7 @@ public class TCA15 {
         System.out.println("TCA15 END");
     }
 
-    public void TCA15_1(WebDriver driver) throws InterruptedException {
+    public void TCA15_1(WebDriver driver) throws Exception {
         //TCA15.1.1: filter by class,assessment
         filterByClassAndAssessment(driver);
 
@@ -56,9 +56,8 @@ public class TCA15 {
         System.out.println("✅ assessment chosen");
     }
 
-    public void highlightRow(WebDriver driver) {
+    public void highlightRow(WebDriver driver) throws Exception {
         //header reference to scroll back to top
-        WebElement header = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.tagName("header")));
 
         //get all rows
         WebElement mainTable = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
@@ -77,8 +76,6 @@ public class TCA15 {
         }
 
         // Scroll back to top
-        ((JavascriptExecutor) driver).executeScript(
-            "arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", header
-        );
+        SeleniumUtils.scrollToElement(By.tagName("header"));
     }
 }
