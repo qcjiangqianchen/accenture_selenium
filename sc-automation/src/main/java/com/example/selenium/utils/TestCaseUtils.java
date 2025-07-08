@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 
 public class TestCaseUtils {
-    public void filterByLevelAndClass(String levelString, String classString) throws Exception {   
+    public static void filterByLevelAndClass(String levelString, String classString) throws Exception {   
         //navigate to level nav tab
         SeleniumUtils.clickElement(By.xpath("//a[@class='site-menu-btn' and @data-target='#megaMenu-level']"));
         Thread.sleep(2000); // Wait for the page to load
