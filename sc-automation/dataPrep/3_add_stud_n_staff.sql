@@ -586,6 +586,9 @@ DECLARE
     v_STAFF_ID CP01.CP_STAFF_PROFILE.STAFF_ID%TYPE;
     v_CLASS_XCODE CP01.CP_ARCH_CLASS.CLASS_XCODE%TYPE;
 
+    v_STAFF_ID2 CP01.CP_STAFF_PROFILE.STAFF_ID%TYPE;
+    v_CLASS_XCODE2 CP01.CP_ARCH_CLASS.CLASS_XCODE%TYPE;
+
     staff_cursor CURSOR (v_sch TEXT, limit_no INTEGER) FOR
         SELECT STAFF_ID 
         FROM CP01.CP_STAFF_PROFILE WHERE SCHOOL_CODE = v_sch 
@@ -617,6 +620,17 @@ BEGIN
 
         CLOSE staff_cursor;
         CLOSE class_cursor;
+
+
+        SELECT STAFF_ID INTO v_STAFF_ID2
+        FROM CP01.CP_STAFF_PROFILE WHERE SCHOOL_CODE = v_school 
+        ORDER BY CREATED_DATE DESC LIMIT 1;
+        SELECT CLASS_XCODE INTO v_CLASS_XCODE2
+        FROM CP01.CP_ARCH_CLASS WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_name='SEC3-01'
+        ORDER BY CREATED_DATE DESC LIMIT 1;
+        UPDATE cp01.cp_arch_class
+        set form_teacher_id = v_STAFF_ID2 WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_xcode = v_CLASS_XCODE2;
+        RAISE NOTICE 'Form teacher for class % is %', v_CLASS_XCODE2, v_STAFF_ID2;
     END LOOP;
 
 END
@@ -677,7 +691,7 @@ BEGIN
         v_start_sch := v_start_sch + 1;
         delete from cp01.cp_stud_attendance where schooL_code  = v_school;
         FOR v_stud IN get_stud_hist_promotion (v_school) LOOP
-            raise notice 'populating cp_stud_hist_schooling for: %; from: %', v_stud.student_id, v_school;
+            -- raise notice 'populating cp_stud_hist_schooling for: %; from: %', v_stud.student_id, v_school;
 
             INSERT INTO cp01.cp_stud_hist_schooling (movement_sys_code, 
                 student_id, 
