@@ -35,6 +35,12 @@ public class SeleniumUtils{
         if (pressEnter)
             element.sendKeys(Keys.ENTER);
     }
+    public static void typeText(WebElement element, String text, boolean pressEnter) {
+        element.clear();
+        element.sendKeys(text);
+        if (pressEnter)
+            element.sendKeys(Keys.ENTER);
+    }
 
     public static String getText(By locator) {
         return DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
