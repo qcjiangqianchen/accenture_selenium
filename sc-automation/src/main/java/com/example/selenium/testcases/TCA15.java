@@ -2,6 +2,7 @@ package com.example.selenium.testcases;
 
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.SeleniumUtils;
+import com.example.selenium.utils.TestCaseUtils;
 
 import java.util.*;
 
@@ -31,28 +32,13 @@ public class TCA15 {
         highlightRow(driver); // Highlight the first row as an example
     }
 
-    public void filterByClassAndAssessment(WebDriver driver) throws InterruptedException {   
-        //navigate to level nav tab
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level nav tab accessed");
+    public void filterByClassAndAssessment(WebDriver driver) throws Exception {   
+        //filter by class and level
+        TestCaseUtils.filterByLevelAndClass("SECONDARY 1", "SEC1-01");
+        System.out.println("✅ level and chosen");
 
-        //filter by level
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level chosen"); 
-
-        //filter by class
-        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
-        List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
-        classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ class chosen");
-
-        //filter by asessment
-        WebElement assessmentSelect = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("select")));
-        assessmentSelect.findElements(By.tagName("option")).get(0).click();
-        Thread.sleep(2000); // Wait for the page to load
+        // filter by assessment
+        SeleniumUtils.selectDropdownByVisibleText(By.xpath("//div[contains(@class, 'dropdown-level-width')]//select"), "OVERALL");
         System.out.println("✅ assessment chosen");
     }
 
