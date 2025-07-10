@@ -46,3 +46,4 @@ sc-automation/target/surefire-reports/com.example.selenium.TCTest/Command line t
 sc-automation/target/surefire-reports/com.example.selenium.TCTest.txt
 sc-automation/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
 sc-automation/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+sc-automation/pom.xml

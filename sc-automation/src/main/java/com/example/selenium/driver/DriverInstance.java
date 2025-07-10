@@ -46,11 +46,20 @@ public class DriverInstance {
 
             // Check if running in CI
             String runEnv = System.getenv("CI"); // or use a custom ENV like SELENIUM_REMOTE
+            String runUAT = System.getenv("UAT"); // or use a custom ENV like SELENIUM_REMOTE
 
             if ("true".equalsIgnoreCase(runEnv)) {
-                // Running in GitLab CI with remote Selenium
-                URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
-                driver = new RemoteWebDriver(seleniumGridUrl, options);
+                if ("true".equalsIgnoreCase(runUAT)) 
+                {
+                    System.setProperty("webdriver.chrome.driver", "chromedriver_136.exe");
+			        driver = new ChromeDriver(options); // Running in GitLab CI with local ChromeDriver
+                }
+                else 
+                {
+                    // Running in GitLab CI with remote Selenium
+                    URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
+                    driver = new RemoteWebDriver(seleniumGridUrl, options);
+                }
             } else {
                 WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
                 driver = new ChromeDriver(options); // Assumes chromedriver is in PATH
