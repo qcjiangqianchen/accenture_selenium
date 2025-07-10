@@ -15,6 +15,7 @@ import com.example.selenium.testcases.TCA16;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
+import org.checkerframework.checker.units.qual.s;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -225,7 +226,11 @@ public class TCTest {
     public void prepareEnvironment(WebDriver driver) throws InterruptedException { 
         // Landing page + login
         driver.manage().window().maximize();   //Mazimize current window
-        driver.get("http://predev.schoolcockpit.local.sc/academic/results-by-subject/SEC1-01");
+        String url = "http://predev.schoolcockpit.local.sc/academic/results-by-subject/SEC1-01";
+        if (System.getenv("UAT") != null && System.getenv("UAT").equalsIgnoreCase("true")) {
+            url = System.getenv("UAT_URL");
+        }
+        driver.get(url);
         LoginUtils.Login(driver);
         LoginUtils.warningBypass(driver);
     }
