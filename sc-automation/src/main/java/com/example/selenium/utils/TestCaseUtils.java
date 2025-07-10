@@ -23,7 +23,7 @@ public class TestCaseUtils {
         System.out.println("✅ level chosen"); 
 
         //filter by class
-        SeleniumUtils.clickElement(By.xpath("//a[normalize-space(text())='" + classString + "']"));
+        SeleniumUtils.clickElement(By.xpath("//div[contains(@class,'ng-star-inserted') and contains(@class, 'show')]//a[normalize-space(text())='" + classString + "']"));
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ class chosen");
     }

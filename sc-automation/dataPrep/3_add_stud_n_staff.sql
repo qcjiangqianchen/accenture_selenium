@@ -622,15 +622,15 @@ BEGIN
         CLOSE class_cursor;
 
 
-        SELECT STAFF_ID INTO v_STAFF_ID2
-        FROM CP01.CP_STAFF_PROFILE WHERE SCHOOL_CODE = v_school 
-        ORDER BY CREATED_DATE DESC LIMIT 1;
-        SELECT CLASS_XCODE INTO v_CLASS_XCODE2
-        FROM CP01.CP_ARCH_CLASS WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_name='SEC3-01'
-        ORDER BY CREATED_DATE DESC LIMIT 1;
-        UPDATE cp01.cp_arch_class
-        set form_teacher_id = v_STAFF_ID2 WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_xcode = v_CLASS_XCODE2;
-        RAISE NOTICE 'Form teacher for class % is %', v_CLASS_XCODE2, v_STAFF_ID2;
+        -- SELECT STAFF_ID INTO v_STAFF_ID2
+        -- FROM CP01.CP_STAFF_PROFILE WHERE SCHOOL_CODE = v_school 
+        -- ORDER BY CREATED_DATE DESC LIMIT 1;
+        -- SELECT CLASS_XCODE INTO v_CLASS_XCODE2
+        -- FROM CP01.CP_ARCH_CLASS WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_name='SEC3-01'
+        -- ORDER BY CREATED_DATE DESC LIMIT 1;
+        -- UPDATE cp01.cp_arch_class
+        -- set form_teacher_id = v_STAFF_ID2 WHERE SCHOOL_CODE = v_school AND ACADEMIC_YEAR = to_char(now(), 'YYYY') and class_xcode = v_CLASS_XCODE2;
+        -- RAISE NOTICE 'Form teacher for class % is %', v_CLASS_XCODE2, v_STAFF_ID2;
     END LOOP;
 
 END
