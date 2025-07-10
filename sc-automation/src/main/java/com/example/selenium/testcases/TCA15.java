@@ -13,26 +13,26 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA15 {
     
-    public void run(WebDriver driver) throws Exception {
+    public void run() throws Exception {
         //navigate to results aggregated view by class 
         System.out.println("TCA15 START");
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA15_1(driver); 
+        TCA15_1(); 
 
         System.out.println("TCA15 END");
     }
 
-    public void TCA15_1(WebDriver driver) throws Exception {
+    public void TCA15_1() throws Exception {
         //TCA15.1.1: filter by class,assessment
-        filterByClassAndAssessment(driver);
+        filterByClassAndAssessment();
 
         //TCA15.1.2: highlight each row in the main table
-        highlightRow(driver); // Highlight the first row as an example
+        highlightRow(); // Highlight the first row as an example
     }
 
-    public void filterByClassAndAssessment(WebDriver driver) throws Exception {   
+    public void filterByClassAndAssessment() throws Exception {   
         //filter by class and level
         TestCaseUtils.filterByLevelAndClass("SECONDARY 1", "SEC1-01");
         System.out.println("✅ level and chosen");
@@ -42,26 +42,27 @@ public class TCA15 {
         System.out.println("✅ assessment chosen");
     }
 
-    public void highlightRow(WebDriver driver) throws Exception {
+    public void highlightRow() throws Exception {
         //header reference to scroll back to top
 
         //get all rows
-        WebElement mainTable = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> rows = mainTable.findElements(By.cssSelector("tr:not(.child_table)"));
-
-        Actions actions = new Actions(driver);
 
         for (int i=0; i<rows.size(); i++) {
             try {
-                actions.moveToElement(rows.get(i)).perform();
+                SeleniumUtils.moveToElementAndHover(rows.get(i));
+                // actions.moveToElement(rows.get(i)).perform();
                 Thread.sleep(1000); // For visibility
+
                 System.out.println("✅ Hovered over row " + (i + 1));
             } catch (Exception e) {
                 System.out.println("❌ Could not hover over row " + (i + 1) + ": " + e.getMessage());
             }
         }
 
-        // Scroll back to top
-        SeleniumUtils.scrollToElement(By.tagName("header"));
+        //header reference to scroll back to top
+        WebElement header = SeleniumUtils.waitForElementToBeVisible(By.tagName("header"));
+        SeleniumUtils.scrollToElement(header);  // Scroll back to top
     }
 }

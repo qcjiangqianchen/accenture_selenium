@@ -15,29 +15,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA14 {
     
-    public void run(WebDriver driver) throws Exception {
+    public void run() throws Exception {
         // Navigate to results by class page
         System.out.println("TCA14 START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'Upload')]");
 
         // TCA14.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA14_1(driver);
+        TCA14_1();
 
         System.out.println("✅ TCA14 END");
         Thread.sleep(10000);
     }
 
-    public void TCA14_1(WebDriver driver) throws Exception {
+    public void TCA14_1() throws Exception {
         try {
-            filterByLevelAndData(driver);
-            downloadReport(driver);
+            filterByLevelAndData();
+            downloadReport();
         } catch (IOException e) {
             System.err.println("Error during file operations: " + e.getMessage());
         }
     
     }
 
-    public void filterByLevelAndData(WebDriver driver) throws Exception{
+    public void filterByLevelAndData() throws Exception{
         //filter by level
         List<WebElement> selectDropdowns = SeleniumUtils.getMinimumNumberOfDropdowns(2);
         selectDropdowns.get(0).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the first dropdown
@@ -48,7 +48,7 @@ public class TCA14 {
         Thread.sleep(2000); // Wait for the page to load
     }
 
-    public void downloadReport(WebDriver driver) throws Exception {
+    public void downloadReport() throws Exception {
         Set<String> before = FileUtils.getFilesBeforeDownload();
         if (before == null || before.isEmpty()) {
             System.out.println("❌ No files found before download.");

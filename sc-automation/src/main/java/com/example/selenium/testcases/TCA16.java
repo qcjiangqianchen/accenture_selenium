@@ -2,6 +2,7 @@ package com.example.selenium.testcases;
 
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.SeleniumUtils;
+import com.example.selenium.utils.TestCaseUtils;
 
 import java.util.*;
 
@@ -12,67 +13,46 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA16 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run() throws Exception {
         //navigate to results aggregated view by class
         System.out.println("TCA16 START");
         SeleniumUtils.navigateToDesiredPage("//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results Aggregated View by Class')]");
 
         //TCA13.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA16_1(driver); 
+        TCA16_1(); 
 
         System.out.println("TCA16 END");
     }
 
-    public void TCA16_1(WebDriver driver) throws InterruptedException {
+    public void TCA16_1() throws Exception {
         //TCA15.1.1: filter by class,assessment
-        filterByClassAndAssessment(driver);
+        filterByClassAndAssessment();
 
         //TCA15.1.2: highlight each row in the main table
-        highlightStudent(driver); // Highlight the first row as an example
+        highlightStudent(); // Highlight the first row as an example
     }
 
-    public void filterByClassAndAssessment(WebDriver driver) throws InterruptedException {   
-        //navigate to level nav tab
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level nav tab accessed");
+    public void filterByClassAndAssessment() throws Exception {   
+        //filter by class and level
+        TestCaseUtils.filterByLevelAndClass("SECONDARY 1", "SEC1-01");
+        System.out.println("✅ level and chosen");
 
-        //filter by level
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level chosen"); 
-
-        //filter by class
-        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
-        List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
-        classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ class chosen");
-
-        //filter by asessment
-        WebElement assessmentSelect = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("select")));
-        assessmentSelect.findElements(By.tagName("option")).get(0).click();
-        Thread.sleep(2000); // Wait for the page to load
+        // filter by assessment
+        SeleniumUtils.selectDropdownByVisibleText(By.xpath("//div[contains(@class, 'dropdown-level-width')]//select"), "OVERALL");
         System.out.println("✅ assessment chosen");
     }
 
-    public void highlightStudent(WebDriver driver) {
-        //header reference to scroll back to top
-        WebElement header = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.tagName("header")));
-
+    public void highlightStudent() throws Exception {
         //get all rows
-        WebElement mainTable = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("main_table"))); //main table; dynamically refreshed within the function for each loop
+        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> rows = mainTable.findElements(By.cssSelector("div.ng-star-inserted"));
-
-        Actions actions = new Actions(driver);
 
         for (int i=0; i<rows.size(); i++) {
             try {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", rows.get(i));
-                Thread.sleep(2000); // For visibility
+                SeleniumUtils.scrollToElement(rows.get(i)); //move into view of element
 
-                actions.moveToElement(rows.get(i)).perform();
-                Thread.sleep(2000); // For visibility
+                SeleniumUtils.moveToElementAndHover(rows.get(i));
+                Thread.sleep(2000); // hovering
                 
                 System.out.println("✅ Hovered over row " + (i + 1));
             } catch (Exception e) {
@@ -80,9 +60,10 @@ public class TCA16 {
             }
         }
 
-        // Scroll back to top
-        ((JavascriptExecutor) driver).executeScript(
-            "arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", header
-        );
+
+        //header reference to scroll back to top
+        WebElement header = SeleniumUtils.waitForElementToBeVisible(By.tagName("header"));
+        SeleniumUtils.scrollToElement(header);  // Scroll back to top
+
     }
 }

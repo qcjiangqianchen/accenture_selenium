@@ -323,7 +323,7 @@ public class TCTest {
         try {
             prepareEnvironment(driver);
             TCA14 tca14 = new TCA14();
-            tca14.run(driver);
+            tca14.run();
         } finally {
             DriverInstance.quitDriver();
         }
@@ -335,7 +335,7 @@ public class TCTest {
         try {
             prepareEnvironment(driver);
             TCA15 tca15 = new TCA15();
-            tca15.run(driver);
+            tca15.run();
         } finally {
             DriverInstance.quitDriver();
         }
@@ -348,7 +348,7 @@ public class TCTest {
         try {
             prepareEnvironment(driver);
             TCA16 tca16 = new TCA16();
-            tca16.run(driver);
+            tca16.run();
         } finally {
             DriverInstance.quitDriver();
         }
