@@ -27,5 +27,9 @@ public class TestCaseUtils {
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ class chosen");
     }
+
+    public static void filterByStudent() {
+        
+    }
 }
     

@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.SeleniumUtils;
+import com.example.selenium.utils.TestCaseUtils;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,7 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA13 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         //navigate to results by student page
         System.out.println("TCA13 START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Results'] and contains(., 'by Student')]");
@@ -22,7 +23,7 @@ public class TCA13 {
         System.out.println("TCA13 END");
     }
 
-    public void TCA13_1(WebDriver driver) throws InterruptedException {
+    public void TCA13_1(WebDriver driver) throws Exception {
         //TCA13.1.1: filter by class, subject, and assessment
         filterByClassStudentAssessment(driver);
 
@@ -39,23 +40,10 @@ public class TCA13 {
         }
     }
 
-    public void filterByClassStudentAssessment(WebDriver driver) throws InterruptedException {
-        //navigate to level nav tab
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level nav tab accessed");
-
-        //filter by level
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level chosen"); 
-
-        //filter by class
-        WebElement classContainer = SeleniumUtils.waitForElementToBeVisible(By.id("megaMenu-level-tab-33"));
-        List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
-        classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ class chosen");
+    public void filterByClassStudentAssessment(WebDriver driver) throws Exception {
+        //filter by class and level
+        TestCaseUtils.filterByLevelAndClass("SECONDARY 1", "SEC1-01");
+        System.out.println("✅ level and chosen");
 
         //filter by student
         WebElement studentSelect = SeleniumUtils.waitForElementToBeVisible(By.tagName("select"));
