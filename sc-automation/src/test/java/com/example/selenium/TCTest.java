@@ -316,7 +316,7 @@ public class TCTest {
         try {
             prepareEnvironment(driver);
             TCA13 tca13 = new TCA13();
-            tca13.run(driver);
+            tca13.run();
         } finally {
             DriverInstance.quitDriver();
         }

@@ -3,6 +3,7 @@ package com.example.selenium.testcases;
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.FileUtils;
 import com.example.selenium.utils.SeleniumUtils;
+import com.example.selenium.utils.TestCaseUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -10,12 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TCA11 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         //navigate to results by class page
         System.out.println("TCA11 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
@@ -29,7 +29,7 @@ public class TCA11 {
         System.out.println("✅ TCA11 END");
     }
 
-    public void TCA11_1(WebDriver driver) throws InterruptedException {
+    public void TCA11_1(WebDriver driver) throws Exception {
         //TCA11.1.1: filter by class, subject, and assessment
         filterByClassSubjectAssessment(driver);
 
@@ -39,18 +39,16 @@ public class TCA11 {
 
         //TCA11.1.2/11.1.3/11.1.4: expand/collapse each tab, input marks for each student, save marks for each term
         for (int i=0; i<expandCollaspeIcon.size(); i++) {
-            expandCollaspeTerm(driver, i);
-            inputMarks(driver);
+            expandCollaspeTerm(i);
+            inputMarks();
             saveMarks(driver);    
-            expandCollaspeTerm(driver, i); // Collapse the term after inputting marks
+            expandCollaspeTerm(i); // Collapse the term after inputting marks
             Thread.sleep(2000); // Wait for the term to expand/collapse
             System.out.println("✅ Term " + (i + 1) + " processed");
         }
     }
 
-    public void TCA11_2(WebDriver driver) throws InterruptedException {
-        // filterByClassSubjectAssessment(driver, wait);
-        
+    public void TCA11_2(WebDriver driver) throws Exception {        
         //loop through each term in the main table
         WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
@@ -58,7 +56,7 @@ public class TCA11 {
         //TCA11.2.1/2.2/2.3: expand/collapse each tab, download file, and make edits to remarks
         for (int i = 0; i < expandCollaspeIcon.size(); i++) {
             try {
-                expandCollaspeTerm(driver, i);
+                expandCollaspeTerm(i);
                 Set<String> before = FileUtils.getFilesBeforeDownload();
                 if (before == null || before.isEmpty()) {
                     System.out.println("❌ No files found before download.");
@@ -68,7 +66,7 @@ public class TCA11 {
                 downloadIcon.click();
                 Path filePath = FileUtils.waitForNewDownload(before, 15);
                 updateCsvWithRemarks(filePath);
-                expandCollaspeTerm(driver, i);
+                expandCollaspeTerm(i);
             } catch (IOException e) {
                 System.out.println("❌ Error updating CSV file: " + e.getMessage());
             } 
@@ -76,63 +74,48 @@ public class TCA11 {
         }
     }
 
-    public void filterByClassSubjectAssessment(WebDriver driver) throws InterruptedException {
-        //navigate to level nav tab
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level nav tab accessed");
+    public void filterByClassSubjectAssessment(WebDriver driver) throws Exception {
+        //filter by class and level
+        TestCaseUtils.filterByLevelAndClass("SECONDARY 3", "SEC3-01");
+        System.out.println("✅ level and chosen");
 
-        //filter by level
-        DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[contains(@class, 'ng-star-inserted') and contains(text(), 'SECONDARY 3')]"))).click();
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ level chosen"); 
-
-        //filter by class
-        WebElement classContainer = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("megaMenu-level-tab-33")));
-        List<WebElement> classGroup = classContainer.findElements(By.xpath(".//div[contains(@class, 'ng-star-inserted')]"));
-        classGroup.get(0).findElement(By.xpath(".//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'SEC3-01')]")).click(); // Click on the first class group
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ class chosen");
-
-        //filter by subject
-        WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
-        WebElement subjectSelect = searchContainer.findElement(By.tagName("select"));
-        List<WebElement> options = subjectSelect.findElements(By.tagName("option"));
-        options.get(1).click(); // Select the second option (e.g., 'English Language')
-        Thread.sleep(2000); // Wait for the page to load
-        System.out.println("✅ subject chosen");
-
+        // //filter by subject
+        // WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
+        // WebElement subjectSelect = searchContainer.findElement(By.tagName("select"));
+        // List<WebElement> options = subjectSelect.findElements(By.tagName("option"));
+        // options.get(1).click(); // Select the second option (e.g., 'English Language')
+        // Thread.sleep(2000); // Wait for the page to load
+        // System.out.println("✅ subject chosen");
+        
         //filter by assessment
-        searchContainer.findElement(By.className("dropdown-btn")).click();
+        SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'multiselect-dropdown')]")); // Click on the assessment dropdown
         Thread.sleep(2000); // Wait for the dropdown to open
         System.out.println("✅ assessment dropdown opened");
-        searchContainer.findElement(By.className("dropdown-btn")).click();
-        Thread.sleep(2000); // Wait for the dropdown to open
-        System.out.println("✅ assessment dropdown opened");
-        System.out.println("TCA11.1.1 successful");
+        WebElement selectAllCheckbox = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']"));
+        Thread.sleep(1000); // Wait for the checkbox to be visible
+        if (!selectAllCheckbox.isSelected()) {
+            SeleniumUtils.clickWithJS(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']")); //select all assessments
+        } 
+        System.out.println("✅ selected all assessments");
     }
 
-    public void expandCollaspeTerm(WebDriver driver, int index) throws InterruptedException {
+    public void expandCollaspeTerm(int index) throws Exception {
         //expand term
-        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
-        List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", expandCollaspeIcon.get(index));
+        List<WebElement> expandCollaspeIcon = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")).findElements(By.tagName("svg-icon"));
+        SeleniumUtils.clickWithJS(expandCollaspeIcon.get(index)); // Click on the expand/collapse icon for the term
         System.out.println("✅ term " + (index + 1) + " expanded/collasped");
     }
 
-    public void inputMarks(WebDriver driver) throws InterruptedException {
-        WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
-        List<WebElement> rows = mainTable.findElements(By.cssSelector("tr:not(.child_table)"));
+    public void inputMarks() throws Exception {
+        //get all rows in the main table
+        List<WebElement> rows = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")).findElements(By.cssSelector("tr:not(.child_table)"));
+
         for (WebElement row:rows) {
             try {
-                //find and clear input fields
+                //find and clear input fields, enter marks
                 WebElement inputField = row.findElement(By.tagName("input"));
-                inputField.clear();
-
-                //input marks
                 String randomMarks = String.valueOf((int) (Math.random() * 20));
-                inputField.sendKeys(randomMarks);
-                Thread.sleep(500);
+                SeleniumUtils.typeText(inputField, randomMarks, false ); //scroll to input field
                 System.out.println("✅ Inputted marks: " + randomMarks + " for row: " + row.getText());
             } catch (NoSuchElementException e) {
                 System.out.println("❌ No input for row: " + row.getText());
@@ -140,14 +123,18 @@ public class TCA11 {
         }
     }
 
-    public void saveMarks(WebDriver driver) throws InterruptedException {
-        WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
-        WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
+    public void saveMarks(WebDriver driver) throws Exception {
+        // WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
+        // WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
+
+        SeleniumUtils.scrollToElement(TestCaseUtils.saveBtn()); //scroll to save btn
+
+        // ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
         Thread.sleep(2000); // Wait for the button to be in view
 
         try {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
+            SeleniumUtils.clickWithJS(TestCaseUtils.saveBtn()); //click save
+            // ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
             Thread.sleep(2000); // Wait for the save action to complete
             System.out.println("✅ Marks saved");
         } catch (ElementClickInterceptedException e) {

@@ -28,8 +28,12 @@ public class TestCaseUtils {
         System.out.println("✅ class chosen");
     }
 
-    public static void filterByStudent() {
-        
+    public static WebElement filterByStudent() {
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class, 'dropdown-student-width')]//select"));
+    }
+
+    public static WebElement saveBtn() {
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//button[contains(@class, 'btn-primary')]"));
     }
 }
     

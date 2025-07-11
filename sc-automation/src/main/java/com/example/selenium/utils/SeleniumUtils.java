@@ -33,39 +33,44 @@ public class SeleniumUtils{
 
     /*INPUT FIELDS */
     //text field input and press enter
-    public static void typeText(By locator, String text, boolean pressEnter) {
+    public static void typeText(By locator, String text, boolean pressEnter) throws Exception {
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
         element.clear();
         element.sendKeys(text);
         if (pressEnter)
             element.sendKeys(Keys.ENTER);
+        Thread.sleep(500);
     }
 
-    public static void typeText(WebElement element, String text, boolean pressEnter) {
+    public static void typeText(WebElement element, String text, boolean pressEnter) throws Exception {
         element.clear();
         element.sendKeys(text);
         if (pressEnter)
             element.sendKeys(Keys.ENTER);
+        Thread.sleep(500);
     }
 
 
     /*DROPSDOWNS*/
     // By option text; dropdown not yet located
-    public static void selectDropdownByVisibleText(By locator, String visibleText) {
+    public static void selectDropdownByVisibleText(By locator, String visibleText) throws Exception{
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
         dropdown.selectByVisibleText(visibleText);
+        Thread.sleep(2000);
     }
 
     // By option text; dropdown already previously defined and located
-    public static void selectDropdownByVisibleText(WebElement element, String value) {
+    public static void selectDropdownByVisibleText(WebElement element, String value) throws Exception {
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
         dropdown.selectByVisibleText(value);
+        Thread.sleep(2000);
     }
 
     // By option value; dropdown not yet located
-    public static void selectDropdownByValue(By locator, String value) {
+    public static void selectDropdownByValue(By locator, String value) throws Exception{
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)));
         dropdown.selectByValue(value);
+        Thread.sleep(2000);
     }
 
     // By option value; dropdown already previously defined and located
@@ -74,8 +79,8 @@ public class SeleniumUtils{
         dropdown.selectByValue(value);
     }
 
-        public static List<WebElement> getAllDropdowns() throws Exception {
-        return DriverInstance.getDriver().findElements(By.tagName("select"));
+    public static List<WebElement> getAllDropdowns() throws Exception {
+        return DriverInstance.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.tagName("select")));
     }
 
     public static List<WebElement> getMinimumNumberOfDropdowns(int expectedCount) throws Exception {
@@ -118,18 +123,27 @@ public class SeleniumUtils{
     //scrolling into view of element
     public static void scrollToElement(WebElement element) throws Exception {
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+        Thread.sleep(2000);
     }
 
     //scrolling into view of element
     public static void scrollToElement(By locator) throws Exception {
         WebElement element = DriverInstance.getDriver().findElement(locator);
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+        Thread.sleep(2000);
     }
 
     //js execution of .click() function
     public static void clickWithJS(By locator) throws Exception {
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(locator));
         ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].click();", element);
+        Thread.sleep(2000);
+    }
+
+    //js execution of .click() function
+    public static void clickWithJS(WebElement element) throws Exception {
+        ((JavascriptExecutor) DriverInstance.getDriver()).executeScript("arguments[0].click();", element);
+        Thread.sleep(2000);
     }
 
     // Utility method to get an Actions object using the global driver
@@ -141,6 +155,7 @@ public class SeleniumUtils{
     public static void moveToElementAndHover(WebElement element) throws Exception {
         Actions actions = new Actions(DriverInstance.getDriver());
         actions.moveToElement(element).perform();
+        Thread.sleep(2000);
     }
 
     //move to element and hover
@@ -148,5 +163,6 @@ public class SeleniumUtils{
         WebElement element = DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
         Actions actions = new Actions(DriverInstance.getDriver());
         actions.moveToElement(element).perform();
+        Thread.sleep(2000);
     }
 }
