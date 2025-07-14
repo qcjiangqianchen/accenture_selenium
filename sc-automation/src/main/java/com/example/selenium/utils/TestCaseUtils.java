@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 
 public class TestCaseUtils {
+    /*filtering utils */
     public static void filterByLevelAndClass(String levelString, String classString) throws Exception {   
         //navigate to level nav tab
         SeleniumUtils.clickElement(By.xpath("//a[@class='site-menu-btn' and @data-target='#megaMenu-level']"));
@@ -32,16 +33,22 @@ public class TestCaseUtils {
         return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class, 'dropdown-student-width')]//select"));
     }
 
+    public static WebElement filterBySubject() {
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class, 'dropdown-subject-width')]//select"));
+    }
+
+
+    /*Downlad reports and save updates utils*/
     public static WebElement saveBtn() {
         return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//button[contains(@class, 'btn-primary')]"));
     }
 
     public static WebElement downloadBtn() {
-        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@class, 'ng-star-inserted')]//img[contains(@id, 'svg-icon')]"));
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@icon_name, 'download')]"));
     }
 
     public static WebElement uploadBtn() {
-        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@class, 'ng-star-inserted')]//img[contains(@id, 'svg-icon')]"));
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@icon_name, 'upload')]"));
     }
 }
     

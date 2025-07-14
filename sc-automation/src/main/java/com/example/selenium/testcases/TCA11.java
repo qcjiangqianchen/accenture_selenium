@@ -1,6 +1,5 @@
 package com.example.selenium.testcases;
 
-import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.utils.FileUtils;
 import com.example.selenium.utils.SeleniumUtils;
 import com.example.selenium.utils.TestCaseUtils;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
 public class TCA11 {
     
@@ -20,18 +19,26 @@ public class TCA11 {
         System.out.println("TCA11 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
 
-        //TCA11.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each student; save marks for each term
-        TCA11_1(driver);
+        Select subjectSelect = new Select(TestCaseUtils.filterByStudent());
+        List<WebElement> subjects = subjectSelect.getOptions();
 
-        //TCA11.2: download CSV file for each term; update CSV file with remarks
-        TCA11_2(driver);
-        
+        for (WebElement subject : subjects) {
+            subject.click();
+            Thread.sleep(2000); // Wait for the page to load
+            System.out.println("✅ Student " + subject.getAttribute("value") + " selected");
+
+            //TCA11.1: filter by class, subject, and assessment; expand/collapse each term; input marks for each subject; save marks for each term
+            TCA11_1();
+
+            //TCA11.2: download CSV file for each term; update CSV file with remarks
+            TCA11_2();
+        }
         System.out.println("✅ TCA11 END");
     }
 
-    public void TCA11_1(WebDriver driver) throws Exception {
+    public void TCA11_1() throws Exception {
         //TCA11.1.1: filter by class, subject, and assessment
-        filterByClassSubjectAssessment(driver);
+        filterByClassSubjectAssessment();
 
         //loop through each term in the main table
         WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
@@ -48,7 +55,7 @@ public class TCA11 {
         }
     }
 
-    public void TCA11_2(WebDriver driver) throws Exception {        
+    public void TCA11_2() throws Exception {      
         //loop through each term in the main table
         WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")); //main table; dynamically refreshed within the function for each loop
         List<WebElement> expandCollaspeIcon = mainTable.findElements(By.tagName("svg-icon"));
@@ -69,22 +76,13 @@ public class TCA11 {
             } catch (IOException e) {
                 System.out.println("❌ Error updating CSV file: " + e.getMessage());
             } 
-
         }
     }
 
-    public void filterByClassSubjectAssessment(WebDriver driver) throws Exception {
+    public void filterByClassSubjectAssessment() throws Exception {
         //filter by class and level
         TestCaseUtils.filterByLevelAndClass("SECONDARY 3", "SEC3-01");
         System.out.println("✅ level and chosen");
-
-        // //filter by subject
-        // WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
-        // WebElement subjectSelect = searchContainer.findElement(By.tagName("select"));
-        // List<WebElement> options = subjectSelect.findElements(By.tagName("option"));
-        // options.get(1).click(); // Select the second option (e.g., 'English Language')
-        // Thread.sleep(2000); // Wait for the page to load
-        // System.out.println("✅ subject chosen");
         
         //filter by assessment
         SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'multiselect-dropdown')]")); // Click on the assessment dropdown
@@ -154,5 +152,4 @@ public class TCA11 {
         Files.write(csvPath, lines);
         System.out.println("✅ CSV updated with remarks.");
     }
-
 }
