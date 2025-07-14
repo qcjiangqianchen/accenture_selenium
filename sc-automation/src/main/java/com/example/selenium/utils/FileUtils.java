@@ -14,7 +14,7 @@ public class FileUtils {
         return Arrays.stream(downloadsPath.toFile().list()).collect(Collectors.toSet());
     }    
 
-    public static Path waitForNewDownload(Set<String> beforeFiles, int timeoutSeconds) throws InterruptedException {
+    public static Path waitForNewDownload(Set<String> beforeFiles, int timeoutSeconds) throws Exception {
         Path downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads");
 
         //waits up to timeoutsecond(approx 2s) to compare the files in Downloads folder to beforefiles

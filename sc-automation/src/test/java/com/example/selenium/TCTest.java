@@ -125,7 +125,7 @@ public class TCTest {
                 } else {
                     System.err.println("❌ Failed: " + sqlFileTemp.getName() + " (Exit Code " + exitCode + ")");
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException | Exception e) {
                 System.err.println("❌ Error executing " + sqlFileTemp.getName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
@@ -214,7 +214,7 @@ public class TCTest {
                 } else {
                     System.err.println("❌ Failed: " + sqlFile.getName() + " (Exit Code " + exitCode + ")");
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException | Exception e) {
                 System.err.println("❌ Error executing " + sqlFile.getName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
@@ -223,7 +223,7 @@ public class TCTest {
     }
 
     @Test(groups = {"loginAndBypass"})
-    public void prepareEnvironment(WebDriver driver) throws InterruptedException { 
+    public void prepareEnvironment(WebDriver driver) throws Exception { 
         // Landing page + login
         driver.manage().window().maximize();   //Mazimize current window
         String url = "http://predev.schoolcockpit.local.sc/academic/results-by-subject/SEC1-01";

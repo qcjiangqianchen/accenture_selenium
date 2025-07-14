@@ -8,7 +8,7 @@ import com.example.selenium.utils.SeleniumUtils;
 
 public class LoginUtils {
     
-    public static void Login(WebDriver driver) throws InterruptedException {
+    public static void Login(WebDriver driver) throws Exception {
         //login inputs
         
         if ("true".equalsIgnoreCase(System.getenv("CI")))
@@ -27,7 +27,7 @@ public class LoginUtils {
         System.out.println("✅ Login successful");
     }
 
-    public static void warningBypass(WebDriver driver) throws InterruptedException {
+    public static void warningBypass(WebDriver driver) throws Exception {
         // try {
         //     wait.until(ExpectedConditions.titleContains("Form is not secure"));
         //     SeleniumUtils.clickElement(By.id("proceed-button"));

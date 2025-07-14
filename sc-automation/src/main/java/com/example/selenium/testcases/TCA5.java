@@ -26,7 +26,7 @@ public class TCA5 {
     static boolean breaker = false;
     static long sleepduration = 1000; // 1 second
 
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         System.out.println("TCA5 START");
 
         TCA5_1(driver);
@@ -35,7 +35,7 @@ public class TCA5 {
         System.out.println("✅ TCA5 END");
     }
 
-    public void TCA5_1(WebDriver driver) throws InterruptedException {
+    public void TCA5_1(WebDriver driver) throws Exception {
         Actions actions = new Actions(driver);
         SeleniumUtils.navigateToDesiredPage("//a[text()='HDP Remarks and Conduct by Class']");
         System.out.println("HDP Remarks and Conduct by class page chosen");
@@ -77,7 +77,7 @@ public class TCA5 {
         WebElement downloadIcon = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
         downloadIcon.click();
     }
-    public void saveMarks(WebDriver driver) throws InterruptedException {
+    public void saveMarks(WebDriver driver) throws Exception {
         WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
@@ -93,7 +93,7 @@ public class TCA5 {
             System.out.println("❌ An unexpected error occurred while trying to save marks: " + e.getMessage());
         }
     }
-    public void filterByClassSubjectAssessment(WebDriver driver) throws InterruptedException {
+    public void filterByClassSubjectAssessment(WebDriver driver) throws Exception {
         //navigate to level nav tab
         DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(1000); // Wait for the page to load

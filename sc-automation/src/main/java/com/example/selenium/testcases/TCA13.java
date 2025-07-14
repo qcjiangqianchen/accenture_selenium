@@ -67,7 +67,7 @@ public class TCA13 {
     }
 
     public void expandCollaspeTerm(int index) throws Exception {
-        //expand term
+        //expand term`
         List<WebElement> expandCollaspeIcon = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")).findElements(By.tagName("svg-icon"));
         SeleniumUtils.clickWithJS(expandCollaspeIcon.get(index)); // Click on the expand/collapse icon for the term
         System.out.println("✅ term " + (index + 1) + " expanded/collasped");

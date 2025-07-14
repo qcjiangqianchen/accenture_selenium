@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SubjectAllocation {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         //navigate to subject allocation page
         System.out.println("Subject Allocation START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Subject'] and contains(., 'Allocation')]");
@@ -35,7 +35,7 @@ public class SubjectAllocation {
 
     }
 
-    public void filterByYearLevelCourse(WebDriver driver) throws InterruptedException, ValidationFailedExecption {
+    public void filterByYearLevelCourse(WebDriver driver) throws Exception, ValidationFailedExecption {
         //get all select tags
         List<WebElement> allSelectTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
          System.out.println("✅ allSelectTags count: " + allSelectTags.size());  // 👈 add this line
@@ -63,7 +63,7 @@ public class SubjectAllocation {
         sortByLevelCLassCourse(levelSelect, courseSelect, classOptions, driver);
     }
 
-    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
         //loop through level and filter by level
         List<WebElement> levelOptions = levelSelect.findElements(By.tagName("option"));
         for (WebElement option : levelOptions) {
@@ -85,7 +85,7 @@ public class SubjectAllocation {
         }
     }
 
-    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
         //no streaming; loop through classes and select students and combi
         for (int i=0; i<classOptions.size(); i++) {
             classOptions.get(i).click(); // Click on the class option
@@ -104,7 +104,7 @@ public class SubjectAllocation {
         }
     }
 
-    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption, InvalidExcpetion {
+    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
         String[] streamTypes = {"express", "N(A)", "N(T)"}; 
 
         //check each class' stream type
@@ -137,7 +137,7 @@ public class SubjectAllocation {
         }
     }
 
-    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver) throws InterruptedException, ValidationFailedExecption {
+    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver) throws Exception, ValidationFailedExecption {
         Map<String, String> sec3StreamTypes = new HashMap<>() {{
             put("express", "S3E");
             put("N(A)", "S3N(A)");

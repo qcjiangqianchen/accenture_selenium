@@ -13,7 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 
 public class TCA7 {
     
-    public void run(WebDriver driver) throws InterruptedException {
+    public void run(WebDriver driver) throws Exception {
         //navigate to results aggregated view by class 
         System.out.println("TCA7 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Subject Remarks by Class / Teaching Group')]");
@@ -24,7 +24,7 @@ public class TCA7 {
         System.out.println("TCA7 END");
     }
 
-    public void TCA7_1(WebDriver driver) throws InterruptedException {
+    public void TCA7_1(WebDriver driver) throws Exception {
         //TCA7.1.1: filter by class, subject, and assessment
         filterByClassSubjectAssessment(driver);
 
@@ -36,7 +36,7 @@ public class TCA7 {
 
     }
 
-    public void filterByClassSubjectAssessment(WebDriver driver) throws InterruptedException{
+    public void filterByClassSubjectAssessment(WebDriver driver) throws Exception{
         //navigate to level nav tab
         DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("a.site-menu-btn"))).get(2).click();
         Thread.sleep(2000); // Wait for the page to load
@@ -68,7 +68,7 @@ public class TCA7 {
     }
 
 
-    public void enterRemarks(WebDriver driver) throws InterruptedException{
+    public void enterRemarks(WebDriver driver) throws Exception{
         //get all rows
         List<WebElement> rows = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("tr:not(.child_table)")));
         

@@ -49,7 +49,7 @@ public class DriverInstance {
             String runUAT = System.getenv("UAT"); // or use a custom ENV like SELENIUM_REMOTE
 
             if ("true".equalsIgnoreCase(runEnv)) {
-                if ("true".equalsIgnoreCase(runUAT)) 
+                if ("true".equalsIgnoreCase(runUAT) && !"true".equalsIgnoreCase(runUAT)) 
                 {
                     String driverPath = System.getProperty("user.dir") + "\\src\\main\\java\\com\\example\\selenium\\driver\\";
                     System.setProperty("webdriver.chrome.driver",driverPath+ "chromedriver_136.exe");

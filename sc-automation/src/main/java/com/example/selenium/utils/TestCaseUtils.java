@@ -35,5 +35,13 @@ public class TestCaseUtils {
     public static WebElement saveBtn() {
         return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//button[contains(@class, 'btn-primary')]"));
     }
+
+    public static WebElement downloadBtn() {
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@class, 'ng-star-inserted')]//img[contains(@id, 'svg-icon')]"));
+    }
+
+    public static WebElement uploadBtn() {
+        return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//svg-icon[contains(@class, 'ng-star-inserted')]//img[contains(@id, 'svg-icon')]"));
+    }
 }
     

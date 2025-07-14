@@ -20,7 +20,7 @@ public class SeleniumUtils{
     }
 
     //initial test case setup; navigates to desired page
-    public static void navigateToDesiredPage(String desiredPage) throws InterruptedException {
+    public static void navigateToDesiredPage(String desiredPage) throws Exception {
         //nav btns at top of page
         SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'site-new-menu')]//a[@data-target='#megaMenu-management2']"));
 

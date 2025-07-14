@@ -41,7 +41,7 @@ public class TCA11 {
         for (int i=0; i<expandCollaspeIcon.size(); i++) {
             expandCollaspeTerm(i);
             inputMarks();
-            saveMarks(driver);    
+            saveMarks();    
             expandCollaspeTerm(i); // Collapse the term after inputting marks
             Thread.sleep(2000); // Wait for the term to expand/collapse
             System.out.println("✅ Term " + (i + 1) + " processed");
@@ -62,8 +62,7 @@ public class TCA11 {
                     System.out.println("❌ No files found before download.");
                     continue; // Skip to the next iteration if no files were found
                 }
-                WebElement downloadIcon = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg-icon[icon_name='download']")));
-                downloadIcon.click();
+                SeleniumUtils.clickWithJS(TestCaseUtils.downloadBtn()); //click the download icon
                 Path filePath = FileUtils.waitForNewDownload(before, 15);
                 updateCsvWithRemarks(filePath);
                 expandCollaspeTerm(i);
@@ -115,7 +114,7 @@ public class TCA11 {
                 //find and clear input fields, enter marks
                 WebElement inputField = row.findElement(By.tagName("input"));
                 String randomMarks = String.valueOf((int) (Math.random() * 20));
-                SeleniumUtils.typeText(inputField, randomMarks, false ); //scroll to input field
+                SeleniumUtils.typeText(inputField, randomMarks, false ); //input marks
                 System.out.println("✅ Inputted marks: " + randomMarks + " for row: " + row.getText());
             } catch (NoSuchElementException e) {
                 System.out.println("❌ No input for row: " + row.getText());
@@ -123,7 +122,7 @@ public class TCA11 {
         }
     }
 
-    public void saveMarks(WebDriver driver) throws Exception {
+    public void saveMarks() throws Exception {
         // WebElement searchContainer = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.id("search_row")));
         // WebElement  saveBtn = searchContainer.findElement(By.tagName("button"));
 
