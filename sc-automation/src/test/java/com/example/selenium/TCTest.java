@@ -125,7 +125,7 @@ public class TCTest {
                 } else {
                     System.err.println("❌ Failed: " + sqlFileTemp.getName() + " (Exit Code " + exitCode + ")");
                 }
-            } catch (IOException | Exception e) {
+            } catch (Exception e) {
                 System.err.println("❌ Error executing " + sqlFileTemp.getName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
@@ -214,7 +214,7 @@ public class TCTest {
                 } else {
                     System.err.println("❌ Failed: " + sqlFile.getName() + " (Exit Code " + exitCode + ")");
                 }
-            } catch (IOException | Exception e) {
+            } catch (Exception e) {
                 System.err.println("❌ Error executing " + sqlFile.getName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
