@@ -48,7 +48,7 @@ public class DriverInstance {
                     prefs.put("plugins.always_open_pdf_externally", true);
                     ChromeOptions options = new ChromeOptions();
                     options.addArguments("start-maximized", "disable-infobars", "window-size=1920,1080", "--disable-extensions", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox", "--disable-cache", "--disable-application-cache", "--disk-cache-size=0");
-                    options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
+                    //options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
                     options.setExperimentalOption("prefs", prefs);
                     // Running in GitLab CI with remote Selenium
                     URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
@@ -102,7 +102,7 @@ public class DriverInstance {
         prefs.put("plugins.always_open_pdf_externally", true);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized", "disable-infobars", "window-size=1920,1080", "--disable-extensions", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox", "--disable-cache", "--disable-application-cache", "--disk-cache-size=0");
-        options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
+        //options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
         options.setExperimentalOption("prefs", prefs);
         return new ChromeDriver(options);
     }
