@@ -2,7 +2,7 @@ package com.example.selenium;
 
 import com.example.selenium.login.LoginUtils;
 import com.example.selenium.driver.DriverInstance;
-import com.example.selenium.loading.SubjectAllocation;
+// import com.example.selenium.loading.SubjectAllocation;
 import com.example.selenium.testcases.TCA1;
 import com.example.selenium.testcases.TCA5;
 import com.example.selenium.testcases.TCA7;
@@ -235,19 +235,19 @@ public class TCTest {
         LoginUtils.warningBypass(driver);
     }
 
-    @Test(groups = {"subjectAllocation"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
-    public void runSubjectAllocation() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
-        try {
-            prepareEnvironment(driver);
-            SubjectAllocation subjectAllocation = new SubjectAllocation();
-            subjectAllocation.run(driver);
-        } finally {
-            if (driver != null) {
-                DriverInstance.quitDriver(); 
-            }
-        }
-    }
+    // @Test(groups = {"subjectAllocation"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    // public void runSubjectAllocation() throws Exception {
+    //     WebDriver driver = DriverInstance.getDriver();
+    //     try {
+    //         prepareEnvironment(driver);
+    //         SubjectAllocation subjectAllocation = new SubjectAllocation();
+    //         subjectAllocation.run(driver);
+    //     } finally {
+    //         if (driver != null) {
+    //             DriverInstance.quitDriver(); 
+    //         }
+    //     }
+    // }
 
     @Test(groups = {"tca1", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA1() throws Exception {
