@@ -52,33 +52,43 @@ public class SubjectAllocation {
     }
 
     public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, WebElement classSelect) throws Exception{
-        List<WebElement> option = SeleniumUtils.getAllOptionsFromDropdown(levelSelect); //get dropdown options for level
+        // List<WebElement> option = SeleniumUtils.getAllOptionsFromDropdown(levelSelect); //get dropdown options for level
 
-        for (int i=2; i<option.size(); i++) {
-            SeleniumUtils.clickElement(option.get(i));
-            System.out.println("✅ Level selected: " + option.get(i).getText());
+        // for (int i=2; i<option.size(); i++) {
+        //     SeleniumUtils.clickElement(option.get(i));
+        //     System.out.println("✅ Level selected: " + option.get(i).getText());
 
-            //check level and execute respective function
-            String level = option.get(i).getText().trim();
-            if (level.equalsIgnoreCase("SECONDARY 1")) {
-                sec1And2SortByClass(classSelect, 1);
-            } else if (level.equalsIgnoreCase("SECONDARY 2")) {
-                sec1And2SortByClass(classSelect, 2);
-                //set the streaming conditions according to level requirements            
-            } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-                sec3And4SortByClass(classSelect, courseSelect, 3);
-            } else if (level.equalsIgnoreCase("SECONDARY 4")) {
-                sec3And4SortByClass(classSelect, courseSelect, 4);
-            }
+        //     //check level and execute respective function
+        //     String level = option.get(i).getText().trim();
+        //     if (level.equalsIgnoreCase("SECONDARY 1")) {
+        //         sec1And2SortByClass(classSelect, 1);
+        //     } else if (level.equalsIgnoreCase("SECONDARY 2")) {
+        //         sec1And2SortByClass(classSelect, 2);
+        //         //set the streaming conditions according to level requirements            
+        //     } else if (level.equalsIgnoreCase("SECONDARY 3")) {
+        //         sec3And4SortByClass(classSelect, courseSelect, 3);
+        //     } else if (level.equalsIgnoreCase("SECONDARY 4")) {
+        //         sec3And4SortByClass(classSelect, courseSelect, 4);
+        //     }
+        // }
+        for (int i = 1; i <= 4; i++) {
+            SeleniumUtils.selectDropdownByVisibleText(levelSelect, " SECONDARY " + i);
+            System.out.println("✅ Level selected: " + "SECONDARY " + i);
+            if (i <= 2) {
+                sec1And2SortByClass(classSelect, i);
+            } else if (i == 3 || i == 4) {
+                sec3And4SortByClass(classSelect, courseSelect, i);
+            } 
         }
     }
 
     public void sec1And2SortByClass(WebElement classSelect, int level) throws Exception {
+        System.out.println("Sorting by class for level: " + level);
         SeleniumUtils.clickElement(classSelect);
         WebElement classOption = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item2']"));
         List<WebElement> options = classOption.findElements(By.xpath(".//li[contains(@class, 'multiselect-item-checkbox')]"));
 
-        for (int i=0; i<options.size(); i++) {
+        for (int i=3; i<options.size(); i++) {
             SeleniumUtils.clickElement(options.get(i));
             System.out.println("✅ Class selected: " + options.get(i).getText());
 
@@ -94,6 +104,7 @@ public class SubjectAllocation {
     }
 
     public void sec3And4SortByClass(WebElement classSelect, WebElement courseSelect, int level) throws Exception {
+        System.out.println("Sorting by class for level: " + level);
         String[] streamTypes = {"EXPRESS", "N(A)", "N(T)"}; 
         
         SeleniumUtils.clickElement(classSelect);
@@ -101,7 +112,7 @@ public class SubjectAllocation {
         List<WebElement> options = classOption.findElements(By.xpath(".//li[contains(@class, 'multiselect-item-checkbox')]"));
 
         //for each class check its streaming type
-        for (int i=0; i<options.size(); i++) {
+        for (int i=3; i<options.size(); i++) {
             boolean foundValidStreaming = false; //streaming type flag
             SeleniumUtils.clickElement(options.get(i)); //select class
             System.out.println("✅ Class selected: " + options.get(i).getText());
@@ -152,19 +163,19 @@ public class SubjectAllocation {
         System.out.println("✅ All students selected");
         List<WebElement> rows = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("//app-subject-allocation-secondary[contains(@id, 'main_table')]//nz-table//tbody/tr[contains(@class, 'ant-table-row') and contains(@class, 'ng-star-inserted')]"));
         System.out.println(rows.size());
-        WebElement lastRow = rows.get(rows.size() - 2);
-        System.out.println("Last row HTML: " + lastRow.getAttribute("outerHTML"));
-        WebElement dropDown = SeleniumUtils.waitForNestedElementVisible(lastRow, By.xpath(".//select[contains(@class, 'custom-select')]"));
+        WebElement subjectSelect = SeleniumUtils.getMinimumNumberOfDropdowns(4).get(3);
+        System.out.println(SeleniumUtils.getAllOptionsFromDropdown(subjectSelect).get(0).getText());
+        WebElement dropDown = subjectSelect;
 
         //select corresponding combination to streaming
         if (level == 1) {
-            SeleniumUtils.selectDropdownByVisibleText(dropDown, "Sec 1 G3 Subject Combi");
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, " Sec 1 G3 Subject Combi CL");
         } else if (level == 2) {
-            SeleniumUtils.selectDropdownByVisibleText(dropDown, "Sec 2 Subject Combi CL");
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, " Sec 2 G3 Subject Combi CL");
         } else if (level == 3) {
-            SeleniumUtils.selectDropdownByVisibleText(dropDown, sec3StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, " " + sec3StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
         } else if (level == 4) {
-            SeleniumUtils.selectDropdownByVisibleText(dropDown, sec4StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, " " + sec4StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
         }
         System.out.println("✅ Subject combination selected");
 
@@ -172,7 +183,7 @@ public class SubjectAllocation {
         SeleniumUtils.scrollToElement(TestCaseUtils.saveBtn());
 
         //4. save the subject combination
-        SeleniumUtils.clickElement(TestCaseUtils.saveBtn());
+        //SeleniumUtils.clickElement(TestCaseUtils.saveBtn());
 
         //VALIDATION -> check if save button is disable to determine save success
         if (TestCaseUtils.saveBtn().getAttribute("disabled") != null || !TestCaseUtils.saveBtn().isEnabled()) {
