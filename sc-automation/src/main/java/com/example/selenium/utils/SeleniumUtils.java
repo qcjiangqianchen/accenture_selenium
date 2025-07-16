@@ -15,8 +15,15 @@ import com.example.selenium.driver.DriverInstance;
 public class SeleniumUtils{
     /*COMMON */
     // locates webelement and clicks on it
-    public static void clickElement(By locator) {
+    public static void clickElement(By locator) throws Exception {
         DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(locator)).click();
+        Thread.sleep(2000); 
+    }
+
+    // locates webelement and clicks on it
+    public static void clickElement(WebElement element) throws Exception {
+        element.click();
+        Thread.sleep(2000); 
     }
 
     //initial test case setup; navigates to desired page
@@ -60,9 +67,9 @@ public class SeleniumUtils{
     }
 
     // By option text; dropdown already previously defined and located
-    public static void selectDropdownByVisibleText(WebElement element, String value) throws Exception {
+    public static void selectDropdownByVisibleText(WebElement element, String visibleText) throws Exception {
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
-        dropdown.selectByVisibleText(value);
+        dropdown.selectByVisibleText(visibleText);
         Thread.sleep(2000);
     }
 
@@ -74,9 +81,10 @@ public class SeleniumUtils{
     }
 
     // By option value; dropdown already previously defined and located
-    public static void selectDropdownByValue(WebElement element, String value) {
+    public static void selectDropdownByValue(WebElement element, String value) throws Exception {
         Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
         dropdown.selectByValue(value);
+        Thread.sleep(2000);
     }
 
     public static List<WebElement> getAllDropdowns() throws Exception {
@@ -88,6 +96,11 @@ public class SeleniumUtils{
             List<WebElement> dropdowns = driver1.findElements(By.tagName("select"));
             return dropdowns.size() >= expectedCount ? dropdowns : null;
         });
+    }
+
+    public static List<WebElement> getAllOptionsFromDropdown(WebElement element) throws Exception {
+        Select dropdown = new Select(DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)));
+        return dropdown.getOptions(); // Returns a list of all <option> elements
     }
 
 
@@ -110,6 +123,12 @@ public class SeleniumUtils{
     public static WebElement waitForElementToBeVisible(By locator){
         return DriverInstance.getWait()
             .until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    //returns a list of all elements found by locator
+    public static List<WebElement> waitForAllElementsToBeVisible(By locator) {
+    return DriverInstance.getWait()
+        .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
     //waits for webelement to be invisible and returns boolean value
@@ -164,5 +183,18 @@ public class SeleniumUtils{
         Actions actions = new Actions(DriverInstance.getDriver());
         actions.moveToElement(element).perform();
         Thread.sleep(2000);
+    }
+
+    /*MISC */
+    //get nested child element
+    public static WebElement waitForNestedElementVisible(WebElement parent, By childLocator) {
+        return DriverInstance.getWait().until(driver -> {
+            try {
+                WebElement child = parent.findElement(childLocator);
+                return (child.isDisplayed()) ? child : null;
+            } catch (Exception e) {
+                return null;
+            }
+        });    
     }
 }

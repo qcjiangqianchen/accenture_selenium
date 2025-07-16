@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 
 public class TCA11 {
     
-    public void run(WebDriver driver) throws Exception {
+    public void run() throws Exception {
         //navigate to results by class page
         System.out.println("TCA11 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
@@ -86,7 +86,6 @@ public class TCA11 {
         
         //filter by assessment
         SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'multiselect-dropdown')]")); // Click on the assessment dropdown
-        Thread.sleep(2000); // Wait for the dropdown to open
         System.out.println("✅ assessment dropdown opened");
         WebElement selectAllCheckbox = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']"));
         Thread.sleep(1000); // Wait for the checkbox to be visible

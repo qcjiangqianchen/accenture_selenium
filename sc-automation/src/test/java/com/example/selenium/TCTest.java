@@ -223,23 +223,23 @@ public class TCTest {
     }
 
     @Test(groups = {"loginAndBypass"})
-    public void prepareEnvironment(WebDriver driver) throws Exception { 
+    public void prepareEnvironment() throws Exception { 
         // Landing page + login
-        driver.manage().window().maximize();   //Mazimize current window
+        DriverInstance.getDriver().manage().window().maximize();   //Mazimize current window
         String url = "http://predev.schoolcockpit.local.sc/academic/results-by-subject/SEC1-01";
         if (System.getenv("UAT") != null && System.getenv("UAT").equalsIgnoreCase("true")) {
             url = System.getenv("UAT_URL");
         }
-        driver.get(url);
-        LoginUtils.Login(driver);
-        LoginUtils.warningBypass(driver);
+        DriverInstance.getDriver().get(url);
+        LoginUtils.Login();
+        LoginUtils.warningBypass();
     }
 
     @Test(groups = {"subjectAllocation"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runSubjectAllocation() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             SubjectAllocation subjectAllocation = new SubjectAllocation();
             subjectAllocation.run(driver);
         } finally {
@@ -253,7 +253,7 @@ public class TCTest {
     public void runTCA1() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA1 tca1 = new TCA1();
             tca1.run(driver);
         } finally {
@@ -265,7 +265,7 @@ public class TCTest {
     public void runTCA5() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA5 tca5 = new TCA5();
             tca5.run(driver);
         } catch (Exception e) {
@@ -281,7 +281,7 @@ public class TCTest {
     public void runTCA7() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA7 tca7 = new TCA7();
             tca7.run(driver);
         } catch (Exception e) {
@@ -295,26 +295,21 @@ public class TCTest {
 
     @Test(groups = {"tca11", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA11() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
-        System.out.println("✅ Test is running!");
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA11 tca11 = new TCA11();
-            tca11.run(driver);
+            tca11.run();
         } catch (Exception e) {
             throw new RuntimeException(e); // rethrow so RetryAnalyzer kicks in
         } finally {
-            if (driver != null) {
-                DriverInstance.quitDriver(); // ✅ always clean up
-            }
+            DriverInstance.quitDriver();
         }
     }
 
     @Test(groups = {"tca13", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA13() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA13 tca13 = new TCA13();
             tca13.run();
         } finally {
@@ -324,9 +319,8 @@ public class TCTest {
 
     @Test(groups = {"tca14", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA14() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA14 tca14 = new TCA14();
             tca14.run();
         } finally {
@@ -336,9 +330,8 @@ public class TCTest {
 
     @Test(groups = {"tca15", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA15() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA15 tca15 = new TCA15();
             tca15.run();
         } finally {
@@ -348,10 +341,8 @@ public class TCTest {
 
     @Test(groups = {"tca16", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA16() throws Exception {
-        WebDriver driver = DriverInstance.getDriver();
-        
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCA16 tca16 = new TCA16();
             tca16.run();
         } finally {
@@ -362,9 +353,8 @@ public class TCTest {
     @Test(groups = {"tcb1", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCB1() throws Exception {
         WebDriver driver = DriverInstance.getDriver();
-        
         try {
-            prepareEnvironment(driver);
+            prepareEnvironment();
             TCB1 tcb1 = new TCB1();
             tcb1.run(driver);
         } finally {

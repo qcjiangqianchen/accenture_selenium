@@ -1,6 +1,7 @@
 package com.example.selenium.loading;
 
 import com.example.selenium.utils.SeleniumUtils;
+import com.example.selenium.utils.TestCaseUtils;
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.exception.ValidationFailedExecption;
 import com.example.selenium.exception.InvalidExcpetion;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SubjectAllocation {
@@ -21,193 +21,168 @@ public class SubjectAllocation {
         System.out.println("Subject Allocation START");
         SeleniumUtils.navigateToDesiredPage("//a[.//span[text()='Subject'] and contains(., 'Allocation')]");
 
-        //subject allocation: assigning subject combinations to students in classes
-        try {
-            filterByYearLevelCourse(driver);
-        } catch (ValidationFailedExecption e) {
-            System.out.println("❌ Validation failed: " + e.getMessage());
-        } catch (InvalidExcpetion e) {
-            System.out.println("❌ Invalid exception: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("❌ An unexpected error occurred: " + e.getMessage());
-        }
-        System.out.println("✅ Subject Allocation END");
-
-    }
-
-    public void filterByYearLevelCourse(WebDriver driver) throws Exception, ValidationFailedExecption {
         //get all select tags
-        List<WebElement> allSelectTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("select")));
-         System.out.println("✅ allSelectTags count: " + allSelectTags.size());  // 👈 add this line
-
+        List<WebElement> allSelectTags = SeleniumUtils.getMinimumNumberOfDropdowns(3);
+        Thread.sleep(2000); 
+        System.out.println("✅ allSelectTags count: " + allSelectTags.size());
         if (allSelectTags.size() < 3) {
             throw new RuntimeException("❌ Page did not load enough <select> elements. Found: " + allSelectTags.size());
         }
         WebElement yearSelect = allSelectTags.get(0);
         WebElement levelSelect = allSelectTags.get(1);
         WebElement courseSelect = allSelectTags.get(2);
+        WebElement classSelect = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//div[contains(@class, 'multiselect-dropdown')]"));
+        Thread.sleep(2000); // Wait for the dropdown to open
 
+        //subject allocation: assigning subject combinations to students in classes
+        try {
+            filterByYear(yearSelect);
+            sortByLevelCLassCourse(levelSelect, courseSelect, classSelect);
+        } catch (Exception e) {
+            System.out.println("❌ An unexpected error occurred: " + e.getMessage());
+        }
+        System.out.println("✅ Subject Allocation END");
+    }
+
+    public void filterByYear(WebElement yearSelect) throws Exception {        
         //filter by year
-        yearSelect.findElements(By.tagName("option")).get(1).click(); // Click on the first option in the year dropdown
+        SeleniumUtils.selectDropdownByVisibleText(yearSelect, "2025");
         Thread.sleep(2000); // Wait for the page to load
         System.out.println("✅ year chosen: " + yearSelect.getAttribute("value"));
-
-
-        //get class dropdown
-        WebElement classSelect = DriverInstance.getWait().until(ExpectedConditions.presenceOfElementLocated(By.className("multiselect-dropdown")));
-        classSelect.click(); // Click to open the class dropdown
-        Thread.sleep(2000); // Wait for the dropdown to open
-        List<WebElement> classOptions = classSelect.findElements(By.tagName("ul")).get(1).findElements(By.tagName("input"));  
-
-        //filter by level, class, course; select students, and then assign subject combi 
-        sortByLevelCLassCourse(levelSelect, courseSelect, classOptions, driver);
     }
 
-    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, List<WebElement> classOptions, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
-        //loop through level and filter by level
-        List<WebElement> levelOptions = levelSelect.findElements(By.tagName("option"));
-        for (WebElement option : levelOptions) {
-            option.click();
-            Thread.sleep(2000); // Wait for the page to load
+    public void sortByLevelCLassCourse(WebElement levelSelect, WebElement courseSelect, WebElement classSelect) throws Exception{
+        List<WebElement> option = SeleniumUtils.getAllOptionsFromDropdown(levelSelect); //get dropdown options for level
+
+        for (int i=2; i<option.size(); i++) {
+            SeleniumUtils.clickElement(option.get(i));
+            System.out.println("✅ Level selected: " + option.get(i).getText());
 
             //check level and execute respective function
-            String level = option.getText().trim();
+            String level = option.get(i).getText().trim();
             if (level.equalsIgnoreCase("SECONDARY 1")) {
-                sec1And2SortByClass(classOptions, courseSelect, 2, driver);
+                sec1And2SortByClass(classSelect, 1);
             } else if (level.equalsIgnoreCase("SECONDARY 2")) {
-                sec1And2SortByClass(classOptions, courseSelect, 2, driver);
+                sec1And2SortByClass(classSelect, 2);
                 //set the streaming conditions according to level requirements            
             } else if (level.equalsIgnoreCase("SECONDARY 3")) {
-                sec3And4SortByClass(classOptions, courseSelect, 3, driver);
+                sec3And4SortByClass(classSelect, courseSelect, 3);
             } else if (level.equalsIgnoreCase("SECONDARY 4")) {
-                sec3And4SortByClass(classOptions, courseSelect, 4, driver);
+                sec3And4SortByClass(classSelect, courseSelect, 4);
             }
         }
     }
 
-    public void sec1And2SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
-        //no streaming; loop through classes and select students and combi
-        for (int i=0; i<classOptions.size(); i++) {
-            classOptions.get(i).click(); // Click on the class option
-            Thread.sleep(2000); // Wait for the page to load
+    public void sec1And2SortByClass(WebElement classSelect, int level) throws Exception {
+        SeleniumUtils.clickElement(classSelect);
+        WebElement classOption = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item2']"));
+        List<WebElement> options = classOption.findElements(By.xpath(".//li[contains(@class, 'multiselect-item-checkbox')]"));
 
-            List<WebElement> allCheckboxTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
+        for (int i=0; i<options.size(); i++) {
+            SeleniumUtils.clickElement(options.get(i));
+            System.out.println("✅ Class selected: " + options.get(i).getText());
 
-            // check if student list appears for respective class
-            if (!allCheckboxTags.isEmpty()) {
-                WebElement selectAllStudents = allCheckboxTags.get(0);
-                WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
-
-                selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, null, level, driver);
-                System.out.println("✅ Students selected for class: " + classOptions.get(i).getText());
+            //validation to check if class have students
+            WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.xpath("//app-subject-allocation-secondary[contains(@id, 'main_table')]//nz-table"));
+            if (!mainTable.getAttribute("class").contains("ant-table-empty")) {
+                selectAllStudentsAndCourse(null, level);
+                SeleniumUtils.clickElement(options.get(i)); //unselect class
+            } else {
+                throw new InvalidExcpetion("No students found for class: " + options.get(i).getText());
             }
         }
     }
 
-    public void sec3And4SortByClass(List<WebElement> classOptions, WebElement courseSelect, int level, WebDriver driver) throws Exception, ValidationFailedExecption, InvalidExcpetion {
-        String[] streamTypes = {"express", "N(A)", "N(T)"}; 
+    public void sec3And4SortByClass(WebElement classSelect, WebElement courseSelect, int level) throws Exception {
+        String[] streamTypes = {"EXPRESS", "N(A)", "N(T)"}; 
+        
+        SeleniumUtils.clickElement(classSelect);
+        WebElement classOption = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item2']"));
+        List<WebElement> options = classOption.findElements(By.xpath(".//li[contains(@class, 'multiselect-item-checkbox')]"));
 
-        //check each class' stream type
-        for (int i=0; i<classOptions.size()-1; i++) {
-
-        boolean foundValidStreaming = false;
+        //for each class check its streaming type
+        for (int i=0; i<options.size(); i++) {
+            boolean foundValidStreaming = false; //streaming type flag
+            SeleniumUtils.clickElement(options.get(i)); //select class
+            System.out.println("✅ Class selected: " + options.get(i).getText());
 
             // Try each of the 3 streaming types
             for (int stream=0; stream < 3; stream++) {
-                courseSelect.findElements(By.tagName("option")).get(stream).click();  // Set streaming
-                Thread.sleep(2000); // Wait for UI update
+                SeleniumUtils.selectDropdownByVisibleText(courseSelect, streamTypes[stream]); // select stream from dropdown
+                System.out.println("✅ Streaming type selected: " + streamTypes[stream]);
 
-                List<WebElement> allCheckboxTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("checkbox")));
-
-                // check if student list appears for respective streaming
-                if (!allCheckboxTags.isEmpty()) {
-                    WebElement selectAllStudents = allCheckboxTags.get(0);
-                    WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
-
-                    selectAllStudentsAndCourse(lastCheckbox, selectAllStudents, allCheckboxTags, streamTypes[stream], level, driver);
+                //validation if chosen class and course has students
+                WebElement mainTable = SeleniumUtils.waitForElementToBeVisible(By.xpath("//app-subject-allocation-secondary[contains(@id, 'main_table')]//nz-table"));
+                if (mainTable.getAttribute("class").contains("ant-table-empty")) {
+                    System.out.println("❌Passing for " + streamTypes[stream] + "; no students found");
+                    continue; // Skip to the next streaming type
+                } else {
                     foundValidStreaming = true;
-                    break; // ✅ Found a valid streaming option, stop trying others
+                    System.out.println("✅ Students found for " + streamTypes[stream]);
+                    selectAllStudentsAndCourse(streamTypes[stream], level);
+                    SeleniumUtils.clickElement(options.get(i)); //unselect class
+                    break; // Found a valid streaming type, break out of the loop
                 }
             }
-            
-            // end of stream loop for 1 class; if no student list for any of the streaming, throw exception
-            if (!foundValidStreaming) {
-                throw new InvalidExcpetion("No valid streaming option found");
-            }
+            //throw exception if class has no valid streaming type
+            if (!foundValidStreaming) throw new InvalidExcpetion("No valid streaming option found");
         }
     }
 
-    public void selectAllStudentsAndCourse(WebElement lastCheckbox, WebElement selectAllStudents, List<WebElement> allSelectTags, String stream, int level, WebDriver driver) throws Exception, ValidationFailedExecption {
+    public void selectAllStudentsAndCourse(String stream, int level) throws Exception {
         Map<String, String> sec3StreamTypes = new HashMap<>() {{
-            put("express", "S3E");
+            put("EXPRESS", "S3E");
             put("N(A)", "S3N(A)");
             put("N(T)", "S3N(T)");
         }};
 
         Map<String, String> sec4StreamTypes = new HashMap<>() {{
-            put("express", "S4E");
+            put("EXPRESS", "S4E");
             put("N(A)", "S4N(A)");
             put("N(T)", "S4N(T)");
         }};
 
-        //select all students 
-        selectAllStudents.click();
-        Thread.sleep(2000); // Wait for the page to load
+        //1. scroll to last checkbox at the bottom of the page
+        List<WebElement> allCheckboxTags = DriverInstance.getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//checkbox[contains(@class, 'ng-untouched')]")));
+        WebElement lastCheckbox = allCheckboxTags.get(allCheckboxTags.size() - 1);
+        SeleniumUtils.scrollToElement(lastCheckbox);
+
+        //2. select all students
+        SeleniumUtils.clickElement(By.xpath("//app-subject-allocation-secondary[contains(@id, 'main_table')]//nz-table//thead//tr//th[1]//checkbox[contains(@class, 'ng-untouched')]//em[contains(@class, 'checkbox-icon')]"));
         System.out.println("✅ All students selected");
+        List<WebElement> rows = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("//app-subject-allocation-secondary[contains(@id, 'main_table')]//nz-table//tbody/tr[contains(@class, 'ant-table-row') and contains(@class, 'ng-star-inserted')]"));
+        System.out.println(rows.size());
+        WebElement lastRow = rows.get(rows.size() - 2);
+        System.out.println("Last row HTML: " + lastRow.getAttribute("outerHTML"));
+        WebElement dropDown = SeleniumUtils.waitForNestedElementVisible(lastRow, By.xpath(".//select[contains(@class, 'custom-select')]"));
 
-        //scroll to bottom for subject combi button to be in view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", allSelectTags.get(3));
-        Thread.sleep(2000); // Wait for the button to be in view
-
-        //select a proper subject combination - express SS+Geog combi
-        List<WebElement> subjectOptions = allSelectTags.get(3).findElements(By.tagName("option"));
-        for (WebElement option : subjectOptions) {
-            String combi = option.getText().trim();
-            if (level == 1) {
-                if (combi.equalsIgnoreCase("Sec 1 G3 Subject Combi")) {
-                    option.click();
-                    Thread.sleep(2000); // Wait for the page to load
-                    System.out.println("✅ Subject combination selected: " + combi);
-                    break;
-                }
-            } else if (level == 2) {
-                if (combi.equalsIgnoreCase("Sec 2 Subject Combi CL")) {
-                    option.click();
-                    Thread.sleep(2000); // Wait for the page to load
-                    System.out.println("✅ Subject combination selected: " + combi);
-                    break;
-                }
-            } else if (level == 3) {
-                if (combi.equalsIgnoreCase(sec3StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL")) {
-                    option.click();
-                    Thread.sleep(2000); // Wait for the page to load
-                    System.out.println("✅ Subject combination selected: " + combi);
-                    break;
-                }
-            } else if (level == 4) {
-                if (combi.equalsIgnoreCase(sec4StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL")) {
-                    option.click();
-                    Thread.sleep(2000); // Wait for the page to load
-                    System.out.println("✅ Subject combination selected: " + combi);
-                    break;
-                }
-            }
+        //select corresponding combination to streaming
+        if (level == 1) {
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, "Sec 1 G3 Subject Combi");
+        } else if (level == 2) {
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, "Sec 2 Subject Combi CL");
+        } else if (level == 3) {
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, sec3StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
+        } else if (level == 4) {
+            SeleniumUtils.selectDropdownByVisibleText(dropDown, sec4StreamTypes.get(stream) + " SubjectCombi SS&GEOG CL");
         }
+        System.out.println("✅ Subject combination selected");
 
-        //scroll to top
-        WebElement saveBtn = DriverInstance.getWait().until(ExpectedConditions.elementToBeClickable(By.tagName("button")));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", saveBtn);
-        Thread.sleep(2000); // Wait for the button to be in view
+        //3. scroll to top
+        SeleniumUtils.scrollToElement(TestCaseUtils.saveBtn());
 
-        //save the subject combination
-        saveBtn.click();
-        Thread.sleep(2000); 
+        //4. save the subject combination
+        SeleniumUtils.clickElement(TestCaseUtils.saveBtn());
 
-        //VALIDATION -> check if sve button is disable to determine save success
-        if (saveBtn.getAttribute("disabled") != null) {
+        //VALIDATION -> check if save button is disable to determine save success
+        if (TestCaseUtils.saveBtn().getAttribute("disabled") != null || !TestCaseUtils.saveBtn().isEnabled()) {
             System.out.println("✅ Subject combi saved");
         } else {
             throw new ValidationFailedExecption("validation failed; subject combi not saved");
         }
     }
 }
+
+
+
+
