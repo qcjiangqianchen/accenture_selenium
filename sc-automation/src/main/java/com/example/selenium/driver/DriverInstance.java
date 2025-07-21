@@ -49,21 +49,8 @@ public class DriverInstance {
                 }
                 else 
                 {
-                    Map<String, Object> prefs = new HashMap<>();
-                    prefs.put("download.default_directory", System.getProperty("user.dir") + "\\Resources\\Downloads");
-                    prefs.put("download.prompt_for_download", false);
-                    prefs.put("download.directory_upgrade", true);
-                    prefs.put("safebrowsing.enabled", true);
-                    prefs.put("safebrowsing.disable_download_protection", true);
-                    prefs.put("plugins.always_open_pdf_externally", true);
-
-                    ChromeOptions options = new ChromeOptions();
-                    options.addArguments("start-maximized", "disable-infobars", "window-size=1920,1080", "--disable-extensions", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox", "--disable-cache", "--disable-application-cache", "--disk-cache-size=0");
-                    //options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
-                    options.setExperimentalOption("prefs", prefs);
-                    // Running in GitLab CI with remote Selenium
-                    URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
-                    driver = new RemoteWebDriver(seleniumGridUrl, options);
+                    WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
+                    driver = createChromeDriver(); // Assumes chromedriver is in PATH
                 }
             } else {
                 WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
