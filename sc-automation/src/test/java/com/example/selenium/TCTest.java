@@ -231,7 +231,7 @@ public class TCTest {
         if (System.getenv("UAT") != null && System.getenv("UAT").equalsIgnoreCase("true")) {
             url = System.getenv("UAT_URL");
         }
-        println("Going into : " + url);
+        System.out.println("Going into : " + url);
         DriverInstance.getDriver().get(url);
         LoginUtils.Login();
         LoginUtils.warningBypass();
