@@ -36,7 +36,7 @@ public class DriverInstance {
     public static WebDriver getDriver() throws Exception{
         if (driver == null) {
 
-            // Check if running in CI
+            // Check if running in CI or UAT pipeline
             String runEnv = System.getenv("CI"); // or use a custom ENV like SELENIUM_REMOTE
             String runUAT = System.getenv("UAT"); // or use a custom ENV like SELENIUM_REMOTE
 
@@ -101,9 +101,7 @@ public class DriverInstance {
             } catch (IOException e) {
                 System.out.println("Failed to create the directory: " + e.getMessage());
             }
-        } else {
-            System.out.println("Directory already exists.");
-        }
+        } 
     }
     private static ChromeDriver createChromeDriver() {
         Map<String, Object> prefs = new HashMap<>();
