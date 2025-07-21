@@ -49,8 +49,21 @@ public class DriverInstance {
                 }
                 else 
                 {
-                    WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
-                    driver = createChromeDriver(); // Assumes chromedriver is in PATH
+                    ChromeOptions options = new ChromeOptions();
+                    String downloadDir = System.getenv("DOWNLOAD_DIR"); //get download dir of user through env variable defined in gitlab-ci.yml
+                    HashMap<String, Object> prefs = new HashMap<>();
+                    if (downloadDir != null && !downloadDir.isEmpty()) {
+                        prefs.put("download.default_directory", downloadDir);
+                    } else {
+                        prefs.put("download.default_directory", System.getProperty("user.home") +"Downloads"); //fallback
+                    } 
+                    // prefs.put("download.default_directory", "C:\\Users\\qianchen.jiang\\Downloads");
+                    prefs.put("download.prompt_for_download", false);
+                    prefs.put("safebrowsing.enabled", true);
+                    options.setExperimentalOption("prefs", prefs);
+                    // Running in GitLab CI with remote Selenium
+                    URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
+                    driver = new RemoteWebDriver(seleniumGridUrl, options);
                 }
             } else {
                 WebDriverManager.chromedriver().setup(); // Ensure chromedriver is set up; donwloads matching chromedriver if required
