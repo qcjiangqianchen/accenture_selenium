@@ -9,6 +9,10 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.Set;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -19,7 +23,7 @@ public class TCA11 {
         System.out.println("TCA11 START");
         SeleniumUtils.navigateToDesiredPage( "//li[contains(@class, 'ng-star-inserted')]//a[contains(text(), 'Results by Class / Teaching Group')]");
 
-        Select subjectSelect = new Select(TestCaseUtils.filterByStudent());
+        Select subjectSelect = new Select(TestCaseUtils.filterBySubject());
         List<WebElement> subjects = subjectSelect.getOptions();
 
         for (WebElement subject : subjects) {
@@ -47,7 +51,7 @@ public class TCA11 {
         //TCA11.1.2/11.1.3/11.1.4: expand/collapse each tab, input marks for each student, save marks for each term
         for (int i=0; i<expandCollaspeIcon.size(); i++) {
             expandCollaspeTerm(i);
-            inputMarks();
+            inputMarks(i + 1); // Input marks for the current term
             saveMarks();    
             expandCollaspeTerm(i); // Collapse the term after inputting marks
             Thread.sleep(2000); // Wait for the term to expand/collapse
@@ -82,17 +86,10 @@ public class TCA11 {
     public void filterByClassSubjectAssessment() throws Exception {
         //filter by class and level
         TestCaseUtils.filterByLevelAndClass("SECONDARY 3", "SEC3-01");
-        System.out.println("✅ level and chosen");
+        System.out.println("✅ level and class chosen");
         
         //filter by assessment
-        SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'multiselect-dropdown')]")); // Click on the assessment dropdown
-        System.out.println("✅ assessment dropdown opened");
-        WebElement selectAllCheckbox = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']"));
-        Thread.sleep(1000); // Wait for the checkbox to be visible
-        if (!selectAllCheckbox.isSelected()) {
-            SeleniumUtils.clickWithJS(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']")); //select all assessments
-        } 
-        System.out.println("✅ selected all assessments");
+        TestCaseUtils.customDropdownAssessmentSelectAll();
     }
 
     public void expandCollaspeTerm(int index) throws Exception {
@@ -102,17 +99,33 @@ public class TCA11 {
         System.out.println("✅ term " + (index + 1) + " expanded/collasped");
     }
 
-    public void inputMarks() throws Exception {
+    public void inputMarks(int term) throws Exception {
         //get all rows in the main table
         List<WebElement> rows = SeleniumUtils.waitForElementToBeVisible(By.id("main_table")).findElements(By.cssSelector("tr:not(.child_table)"));
+        ArrayList<Integer> marks = new ArrayList<>();
+        String desiredTerm = " TERM " + term + " WA"; // e.g. "TERM 2 WA"
+
+        //get marks for each assessment 
+        List<WebElement> headers = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("//div[contains(@id, 'main_table')]//nz-table//thead//tr//th"));
+        for (int i = 0; i < headers.size(); i++) {
+            if ((SeleniumUtils.getText(headers.get(i).findElement(By.xpath(".//div[contains(@class, 'aeesee-div') and contains (@class, 'text-center')]//div[contains(@class, 'aeesee-div') and contains(text(), 'TERM')]")))).contains(desiredTerm)) {
+                //get the marks 
+                String rawMarks = SeleniumUtils.getText(headers.get(i).findElement(By.xpath(".//span[contains(@class, 'ng-star-inserted') and contains(text(), 'Max')]")));
+                int mark = Integer.parseInt(rawMarks.replaceAll("[^0-9]", ""));
+                marks.add(mark); // Remove non-numeric characters
+                System.out.println("✅ Extracted max score: " + mark);
+            }
+        }
 
         for (WebElement row:rows) {
             try {
                 //find and clear input fields, enter marks
-                WebElement inputField = row.findElement(By.tagName("input"));
-                String randomMarks = String.valueOf((int) (Math.random() * 20));
-                SeleniumUtils.typeText(inputField, randomMarks, false ); //input marks
-                System.out.println("✅ Inputted marks: " + randomMarks + " for row: " + row.getText());
+                List<WebElement> inputFields = row.findElements(By.tagName("input"));
+                for (int x=0; x<inputFields.size(); x++) {
+                    String randomMarks = String.valueOf((int) (Math.random() * marks.get(x)));
+                    SeleniumUtils.typeText(inputFields.get(x), randomMarks, false ); //input marks
+                    System.out.println("✅ Inputted marks: " + randomMarks + " for row: " + row.getText());
+                }
             } catch (NoSuchElementException e) {
                 System.out.println("❌ No input for row: " + row.getText());
             }

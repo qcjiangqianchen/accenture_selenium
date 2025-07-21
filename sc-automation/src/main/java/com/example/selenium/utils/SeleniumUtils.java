@@ -110,6 +110,11 @@ public class SeleniumUtils{
         return DriverInstance.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
     }
 
+    //returns the text of a web element located by the given locator
+    public static String getText(WebElement element) {
+        return DriverInstance.getWait().until(ExpectedConditions.visibilityOf(element)).getText();
+    }
+
     //returns boolean value to check if element is visible
     public static boolean isElementDisplayed(By locator) {
         try {
@@ -123,6 +128,12 @@ public class SeleniumUtils{
     public static WebElement waitForElementToBeVisible(By locator){
         return DriverInstance.getWait()
             .until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    //waits for webelement to be visible and returns it
+    public static WebElement waitForElementToBeVisible(WebElement element){
+        return DriverInstance.getWait()
+            .until(ExpectedConditions.visibilityOf(element));
     }
 
     //returns a list of all elements found by locator

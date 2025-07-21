@@ -37,8 +37,19 @@ public class TestCaseUtils {
         return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class, 'dropdown-subject-width')]//select"));
     }
 
+    public static void customDropdownAssessmentSelectAll() throws Exception {
+        SeleniumUtils.clickWithJS(By.xpath("//span[contains(@class, 'dropdown-btn')]")); // Click on the assessment dropdown
+        System.out.println("✅ assessment dropdown opened");
+        WebElement selectAllCheckbox = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']"));
+        Thread.sleep(1000); // Wait for the checkbox to be visible
+        if (!selectAllCheckbox.isSelected()) {
+            SeleniumUtils.clickWithJS(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']")); //select all assessments
+        } 
+        System.out.println("✅ selected all assessments");
+    }
 
-    /*Downlad reports and save updates utils*/
+
+    /*Download reports and save updates utils*/
     public static WebElement saveBtn() {
         return SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@id, 'search_row')]//button[contains(@class, 'btn-primary')]"));
     }

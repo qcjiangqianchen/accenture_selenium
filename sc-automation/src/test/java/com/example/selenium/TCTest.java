@@ -3,6 +3,7 @@ package com.example.selenium;
 import com.example.selenium.login.LoginUtils;
 import com.example.selenium.driver.DriverInstance;
 import com.example.selenium.loading.SubjectAllocation;
+import com.example.selenium.loading.SubjectSetup;
 import com.example.selenium.testcases.TCA1;
 import com.example.selenium.testcases.TCA5;
 import com.example.selenium.testcases.TCA7;
@@ -245,6 +246,20 @@ public class TCTest {
         } finally {
             if (driver != null) {
                 DriverInstance.quitDriver(); 
+            }
+        }
+    }
+
+    @Test(groups = {"subjectSetup"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
+    public void runSubjectSetup() throws Exception {
+        WebDriver driver = DriverInstance.getDriver();
+        try {
+            prepareEnvironment();
+            SubjectSetup subjectSetup = new SubjectSetup();
+            subjectSetup.run();
+        } finally {
+            if (driver != null) {
+                DriverInstance.quitDriver(); // ✅ always clean up
             }
         }
     }
