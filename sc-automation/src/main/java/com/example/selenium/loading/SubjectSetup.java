@@ -60,10 +60,12 @@
             
             //loop through each row and set weightage
             for (int i = 0; i < numRows; i++) {
-                List<WebElement> rows = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("//div[contains(@id, 'main_table')]//nz-table//tbody/tr[contains(@class, 'ant-table-row') and contains(@class, 'ng-star-inserted')]"));
-                SeleniumUtils.clickElement(rows.get(i).findElement(By.xpath(".//td[1]//checkbox[contains(@class, 'ng-untouched')]//em[contains(@class, 'checkbox-icon')]")));
+                WebElement row = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("(//div[contains(@id, 'main_table')]//nz-table//tbody/tr[contains(@class, 'ant-table-row') and contains(@class, 'ng-star-inserted')])[" + (i+1) + "]")).get(i);
+                // List<WebElement> rows = SeleniumUtils.waitForAllElementsToBeVisible(By.xpath("//div[contains(@id, 'main_table')]//nz-table//tbody/tr[contains(@class, 'ant-table-row') and contains(@class, 'ng-star-inserted')]"));
+                SeleniumUtils.clickElement(row.findElement(By.xpath(".//td[1]//checkbox[contains(@class, 'ng-untouched')]//em[contains(@class, 'checkbox-icon')]")));
                 System.out.println("✅ Row selected for input");
-                String resultEntryType = SeleniumUtils.waitForElementToBeVisible(rows.get(i).findElement(By.xpath(".//td[7]//span"))).getText();
+                String resultEntryType = SeleniumUtils.waitForElementToBeVisible(row.findElement(By.xpath(".//td[7]//span"))).getText();
+                System.out.println("✅ Result Entry Type: " + resultEntryType);
 
                 //validate arrow is clicked and down
                 SeleniumUtils.clickElement(By.xpath("//app-component-set-up-multiple-subject-marks[contains(@class, 'ng-star-inserted')]//nz-table//thead//tr//th[1]//svg-icon"));
