@@ -43,7 +43,6 @@ public class TCA13 {
             for (int i = 0; i < expandCollaspeIcon.size(); i++) {
                 expandCollaspeTerm(i);
                 expandCollaspeTerm(i);// Collapse the term after inputting marks
-                Thread.sleep(2000); // Wait for the term to expand/collapse
                 System.out.println("✅ Term " + (i + 1) + " processed");
             }
         }
@@ -56,7 +55,6 @@ public class TCA13 {
         
         //filter by assessment
         SeleniumUtils.clickElement(By.xpath("//div[contains(@class, 'multiselect-dropdown')]")); // Click on the assessment dropdown
-        Thread.sleep(2000); // Wait for the dropdown to open
         System.out.println("✅ assessment dropdown opened");
         WebElement selectAllCheckbox = SeleniumUtils.waitForElementToBeVisible(By.xpath("//div[contains(@class,'dropdown-list')]//ul[@class='item1']//li[1]//input[@type='checkbox']"));
         Thread.sleep(1000); // Wait for the checkbox to be visible
