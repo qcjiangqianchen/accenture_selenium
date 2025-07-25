@@ -44,7 +44,7 @@ public class DriverInstance {
             if ("true".equalsIgnoreCase(runEnv)) {
                 if (!"true".equalsIgnoreCase(runUAT)) 
                 {
-                    String driverPath = System.getProperty("user.dir") + "/src/main/java/com/example/selenium/driver";
+                    String driverPath = System.getProperty("user.dir") + "/src/main/java/com/example/selenium/driver/";
                     String fullDriverPath = driverPath + "chromedriver_136.exe";
 
                     System.out.println("[DEBUG] runEnv = " + runEnv);
@@ -113,7 +113,7 @@ public class DriverInstance {
     }
     private static ChromeDriver createChromeDriver() {
         Map<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", System.getProperty("user.dir") + "\\Resources\\Downloads");
+        prefs.put("download.default_directory", System.getProperty("user.dir") + "/Resources/Downloads");
         prefs.put("download.prompt_for_download", false);
         prefs.put("download.directory_upgrade", true);
         prefs.put("safebrowsing.enabled", true);
