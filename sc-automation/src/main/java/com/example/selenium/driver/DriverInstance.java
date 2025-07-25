@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -43,9 +44,12 @@ public class DriverInstance {
             if ("true".equalsIgnoreCase(runEnv)) {
                 if (!"true".equalsIgnoreCase(runUAT)) 
                 {
-                    String driverPath = System.getProperty("user.dir") + "\\src\\main\\java\\com\\example\\selenium\\driver\\";
+                    String driverPath = System.getProperty("user.dir") + "/src/main/java/com/example/selenium/driver";
                     System.setProperty("webdriver.chrome.driver",driverPath+ "chromedriver_136.exe");
                     driver = createChromeDriver(); // Running in GitLab CI with local ChromeDriver
+
+                    System.out.println("[DEBUG] driverPath = " + driverPath);
+                    System.out.println("[DEBUG] driver.exists = " + new File(driverPath + "chromedriver_136.exe").exists());
                 }
                 else 
                 {
@@ -113,7 +117,7 @@ public class DriverInstance {
         prefs.put("plugins.always_open_pdf_externally", true);
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new", "start-maximized", "disable-infobars", "window-size=1920,1080", "--disable-extensions", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox", "--disable-cache", "--disable-application-cache", "--disk-cache-size=0");
+        options.addArguments( "start-maximized", "disable-infobars", "window-size=1920,1080", "--disable-extensions", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox", "--disable-cache", "--disable-application-cache", "--disk-cache-size=0");
         //options.addArguments("user-data-dir=" + System.getProperty("user.dir") + "\\Resources\\chrome-profile");
         options.setExperimentalOption("prefs", prefs);
 
