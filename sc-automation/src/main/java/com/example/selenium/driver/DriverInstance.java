@@ -45,11 +45,15 @@ public class DriverInstance {
                 if (!"true".equalsIgnoreCase(runUAT)) 
                 {
                     String driverPath = System.getProperty("user.dir") + "/src/main/java/com/example/selenium/driver";
+                    String fullDriverPath = driverPath + "chromedriver_136.exe";
+
+                    System.out.println("[DEBUG] runEnv = " + runEnv);
+                    System.out.println("[DEBUG] runUAT = " + runUAT);
+                    System.out.println("[DEBUG] driverPath = " + fullDriverPath);
+                    System.out.println("[DEBUG] File exists: " + new File(fullDriverPath).exists());
+
                     System.setProperty("webdriver.chrome.driver",driverPath+ "chromedriver_136.exe");
                     driver = createChromeDriver(); // Running in GitLab CI with local ChromeDriver
-
-                    System.out.println("[DEBUG] driverPath = " + driverPath);
-                    System.out.println("[DEBUG] driver.exists = " + new File(driverPath + "chromedriver_136.exe").exists());
                 }
                 else 
                 {
@@ -96,7 +100,7 @@ public class DriverInstance {
         }
     }
     private static void createDownloadDirectory() {
-        String outputDirectory = System.getProperty("user.dir") + "\\Resources\\Downloads";
+        String outputDirectory = Paths.get(System.getProperty("user.dir"), "Resources", "Downloads").toString();
         Path directoryPath = Paths.get(outputDirectory);
         if (!Files.exists(directoryPath)) {
             try {
