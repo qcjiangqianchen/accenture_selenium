@@ -99,7 +99,7 @@ public class DriverInstance {
         if (driver != null) {
             driver.quit();
             driver = null; // reset driver
-            wait = null; // reset wait
+            wait = null; // reset wait;
         }
     }
     private static void createDownloadDirectory() {
