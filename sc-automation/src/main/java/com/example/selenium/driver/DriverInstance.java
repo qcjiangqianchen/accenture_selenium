@@ -44,16 +44,9 @@ public class DriverInstance {
             if ("true".equalsIgnoreCase(runEnv)) {
                 if ("true".equalsIgnoreCase(runUAT)) 
                 {
-                    String driverPath = System.getProperty("user.dir") + "/src/main/java/com/example/selenium/driver/";
-                    String fullDriverPath = driverPath + "chromedriver_136.exe";
-
-                    System.out.println("[DEBUG] runEnv = " + runEnv);
-                    System.out.println("[DEBUG] runUAT = " + runUAT);
-                    System.out.println("[DEBUG] driverPath = " + fullDriverPath);
-                    System.out.println("[DEBUG] File exists: " + new File(fullDriverPath).exists());
-
+                    String driverPath = System.getProperty("user.dir") + "\\src\\main\\java\\com\\example\\selenium\\driver\\";
                     System.setProperty("webdriver.chrome.driver",driverPath+ "chromedriver_136.exe");
-                    driver = createChromeDriver(); // Running in GitLab CI with local ChromeDriver
+                    driver = new ChromeDriver(); // Running in UAT with local ChromeDriver
                 }
                 else 
                 {
