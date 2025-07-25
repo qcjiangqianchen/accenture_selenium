@@ -24,7 +24,6 @@ public class TCA14 {
         TCA14_1();
 
         System.out.println("✅ TCA14 END");
-        Thread.sleep(10000);
     }
 
     public void TCA14_1() throws Exception {
@@ -34,7 +33,6 @@ public class TCA14 {
         } catch (IOException e) {
             System.err.println("Error during file operations: " + e.getMessage());
         }
-    
     }
 
     public void filterByLevelAndData() throws Exception{
