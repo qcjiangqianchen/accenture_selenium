@@ -63,7 +63,17 @@ public class DriverInstance {
                     prefs.put("safebrowsing.enabled", true);
                     options.setExperimentalOption("prefs", prefs);
                     // Running in GitLab CI with remote Selenium
-                    URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
+                    // URL seleniumGridUrl = new URI("http://selenium:4444/wd/hub").toURL();
+                    // driver = new RemoteWebDriver(seleniumGridUrl, options);
+
+                    String gridUrl;
+                    if ("true".equalsIgnoreCase(System.getenv("CI"))) {
+                        gridUrl = "http://localhost:4444/wd/hub";
+                    } else {
+                        gridUrl = "http://selenium:4444/wd/hub";
+                    }
+
+                    URL seleniumGridUrl = new URI(gridUrl).toURL();
                     driver = new RemoteWebDriver(seleniumGridUrl, options);
                 }
             } else {
