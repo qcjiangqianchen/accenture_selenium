@@ -38,12 +38,12 @@ public class TCA14 {
     public void filterByLevelAndData() throws Exception{
         //filter by level
         List<WebElement> selectDropdowns = SeleniumUtils.getMinimumNumberOfDropdowns(2);
-        selectDropdowns.get(0).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the first dropdown
-        Thread.sleep(2000); // Wait for the page to load
+        SeleniumUtils.selectDropdownByVisibleText(selectDropdowns.get(0), " SECONDARY 3"); // Select the first dropdown
+        System.out.println("✅ level chosen");
 
         //filter by data set
-        selectDropdowns.get(1).findElements(By.tagName("option")).get(1).click(); // Click on the first option in the second dropdown
-        Thread.sleep(2000); // Wait for the page to load
+        SeleniumUtils.selectDropdownByVisibleText(selectDropdowns.get(1), "   Student HDP Remarks and Conduct   "); // Select the second dropdown
+        System.out.println("✅ data set chosen");
     }
 
     public void downloadReport() throws Exception {
@@ -54,8 +54,44 @@ public class TCA14 {
         }
         // Click on the download button
         SeleniumUtils.clickElement(By.cssSelector("svg-icon[icon_name='download']"));
-        Thread.sleep(2000); // Wait for the download to complete
-        Path filePath = FileUtils.waitForNewDownload(before, 15);
+        System.out.println("✅ Download button clicked");
+        
+        //get the path of the downloaded file
+        Path filePath = null;
+        try {
+            filePath = FileUtils.waitForNewDownload(before, 15);
+        } catch (Exception e) {
+            // Couldn't detect a new file within timeout
+            System.out.println("⚠️ No new file detected after waiting. Skipping update.");
+            return;
+        }
+
+        // Check if filePath is null
+        if (filePath == null) {
+            System.out.println("⚠️ File path is null. Skipping CSV update.");
+            return;
+        }
+
+        // Check if file is readable
+        if (!Files.isReadable(filePath)) {
+            System.out.println("⚠️ File exists but is not readable: " + filePath);
+            return;
+        }
+
+        // Update the CSV file with remarks and handle exceptions
+        try {
+            updateCsvWithRemarks(filePath);
+        } catch (IOException ioe) {
+            // IOException specifically for file reading/writing issues
+            System.out.println("⚠️ Failed to update CSV file: " + filePath);
+            ioe.printStackTrace();
+            return;
+        } catch (Exception ex) {
+            // Any other exception: rethrow
+            System.out.println("❌ Unexpected error while updating CSV.");
+            throw ex;
+    }
+        
         updateCsvWithRemarks(filePath);
     }
 

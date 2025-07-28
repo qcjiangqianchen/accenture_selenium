@@ -185,7 +185,7 @@ public class SeleniumUtils{
     public static void moveToElementAndHover(WebElement element) throws Exception {
         Actions actions = new Actions(DriverInstance.getDriver());
         actions.moveToElement(element).perform();
-        Thread.sleep(2000);
+        Thread.sleep(1000);
     }
 
     //move to element and hover

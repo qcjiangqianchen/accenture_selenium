@@ -312,7 +312,7 @@ public class TCTest {
     @Test(groups = {"tca11", "SEC"}, retryAnalyzer = com.example.selenium.RetryAnalyzer.class)
     public void runTCA11() throws Exception {
         try {
-            prepareEnvironment();
+            // prepareEnvironment();
             TCA11 tca11 = new TCA11();
             tca11.run();
         } catch (Exception e) {

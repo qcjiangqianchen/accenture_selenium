@@ -53,7 +53,6 @@ public class TCA15 {
             try {
                 SeleniumUtils.moveToElementAndHover(rows.get(i));
                 // actions.moveToElement(rows.get(i)).perform();
-                Thread.sleep(1000); // For visibility
 
                 System.out.println("✅ Hovered over row " + (i + 1));
             } catch (Exception e) {
